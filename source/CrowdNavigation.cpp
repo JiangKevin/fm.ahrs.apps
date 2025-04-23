@@ -137,11 +137,11 @@ void CrowdNavigation::CreateScene()
     // Creating connections post-build here allows us to use FindNearestPoint() to procedurally set accurate positions for the connection
     CreateBoxOffMeshConnections( navMesh, boxGroup );
 
-    // Create some mushrooms as obstacles. Note that obstacles are non-walkable areas
-    for ( unsigned i = 0; i < 100; ++i )
-    {
-        CreateMushroom( Vector3( Random( 90.0f ) - 45.0f, 0.0f, Random( 90.0f ) - 45.0f ) );
-    }
+    // // Create some mushrooms as obstacles. Note that obstacles are non-walkable areas
+    // for ( unsigned i = 0; i < 100; ++i )
+    // {
+    //     CreateMushroom( Vector3( Random( 90.0f ) - 45.0f, 0.0f, Random( 90.0f ) - 45.0f ) );
+    // }
     // Create a CrowdManager component to the scene root
     auto*                        crowdManager = scene_->CreateComponent< CrowdManager >();
     CrowdObstacleAvoidanceParams params       = crowdManager->GetObstacleAvoidanceParams( 0 );
