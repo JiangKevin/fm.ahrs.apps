@@ -135,7 +135,7 @@ private:
     void HandleCrowdAgentReposition( StringHash eventType, VariantMap& eventData );
     /// Handle crowd agent formation.
     void HandleCrowdAgentFormation( StringHash eventType, VariantMap& eventData );
-
+public:
     /// Flag for using navigation mesh streaming.
     bool useStreaming_{};
     /// Streaming distance.
@@ -148,4 +148,7 @@ private:
     bool drawDebug_{};
     /// Instruction text UI-element.
     Text* instructionText_{};
+    //
+    Vector3   hitPos;
+    Drawable* hitDrawable;
 };

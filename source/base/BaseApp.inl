@@ -164,7 +164,7 @@ void BaseApp::CreateLogo()
     logoSprite_->SetAlignment( HA_RIGHT, VA_BOTTOM );
 
     // Make logo not fully opaque to show the scene underneath
-    logoSprite_->SetOpacity( 0.9f );
+    logoSprite_->SetOpacity( 0.7f );
 
     // Set a low priority for the logo so that other UI elements can be drawn on top
     logoSprite_->SetPriority( -100 );

@@ -9,6 +9,7 @@
 #include <Urho3D/Graphics/Material.h>
 #include <Urho3D/Graphics/Octree.h>
 #include <Urho3D/Graphics/Renderer.h>
+#include <Urho3D/Graphics/Terrain.h>
 #include <Urho3D/Graphics/Zone.h>
 #include <Urho3D/Input/Input.h>
 #include <Urho3D/Navigation/CrowdAgent.h>
@@ -17,11 +18,14 @@
 #include <Urho3D/Navigation/NavigationEvents.h>
 #include <Urho3D/Navigation/Obstacle.h>
 #include <Urho3D/Navigation/OffMeshConnection.h>
+#include <Urho3D/Physics/CollisionShape.h>
+#include <Urho3D/Physics/RigidBody.h>
 #include <Urho3D/Resource/ResourceCache.h>
 #include <Urho3D/Scene/Scene.h>
 #include <Urho3D/UI/Font.h>
 #include <Urho3D/UI/Text.h>
 #include <Urho3D/UI/UI.h>
+
 //
 #include "CrowdNavigation.h"
 #include <Urho3D/DebugNew.h>
@@ -64,10 +68,10 @@ void CrowdNavigation::CreateScene()
 
     // Create scene node & StaticModel component for showing a static plane
     Node* planeNode = scene_->CreateChild( "Plane" );
-    planeNode->SetScale( Vector3( 100.0f, 1.0f, 100.0f ) );
+    planeNode->SetScale( Vector3( 1000.0f, 1.0f, 1000.0f ) );
     auto* planeObject = planeNode->CreateComponent< StaticModel >();
     planeObject->SetModel( cache->GetResource< Model >( "Models/Plane.mdl" ) );
-    planeObject->SetMaterial( cache->GetResource< Material >( "Materials/StoneTiled.xml" ) );
+    planeObject->SetMaterial( cache->GetResource< Material >( "Materials/Terrain.xml" ) );
 
     // Create a Zone component for ambient lighting & fog control
     Node* zoneNode = scene_->CreateChild( "Zone" );
@@ -162,7 +166,7 @@ void CrowdNavigation::CreateScene()
 
     // Set an initial position for the camera scene node above the plane and looking down
     cameraNode_->SetPosition( Vector3( 0.0f, 50.0f, 0.0f ) );
-    pitch_ = 80.0f;
+    pitch_ = 90.0f;
     cameraNode_->SetRotation( Quaternion( pitch_, yaw_, 0.0f ) );
 }
 
@@ -312,8 +316,6 @@ void CrowdNavigation::CreateMovingBarrels( DynamicNavigationMesh* navMesh )
 
 void CrowdNavigation::SetPathPoint( bool spawning )
 {
-    Vector3   hitPos;
-    Drawable* hitDrawable;
 
     if ( Raycast( 250.0f, hitPos, hitDrawable ) )
     {
@@ -421,19 +423,19 @@ void CrowdNavigation::MoveCamera( float timeStep )
     }
 
     // Read WASD keys and move the camera scene node to the corresponding direction if they are pressed
-    if ( input->GetKeyDown( KEY_W ) )
+    if ( input->GetKeyDown( KEY_W ) || input->GetKeyDown( KEY_UP ) )
     {
         cameraNode_->Translate( Vector3::FORWARD * MOVE_SPEED * timeStep );
     }
-    if ( input->GetKeyDown( KEY_S ) )
+    if ( input->GetKeyDown( KEY_S ) || input->GetKeyDown( KEY_DOWN ) )
     {
         cameraNode_->Translate( Vector3::BACK * MOVE_SPEED * timeStep );
     }
-    if ( input->GetKeyDown( KEY_A ) )
+    if ( input->GetKeyDown( KEY_A ) || input->GetKeyDown( KEY_LEFT ) )
     {
         cameraNode_->Translate( Vector3::LEFT * MOVE_SPEED * timeStep );
     }
-    if ( input->GetKeyDown( KEY_D ) )
+    if ( input->GetKeyDown( KEY_D ) || input->GetKeyDown( KEY_RIGHT ) )
     {
         cameraNode_->Translate( Vector3::RIGHT * MOVE_SPEED * timeStep );
     }
@@ -497,7 +499,9 @@ void CrowdNavigation::UpdateStreaming()
     {
         const unsigned numJacks = jackGroup->GetNumChildren();
         for ( unsigned i = 0; i < numJacks; ++i )
+        {
             averageJackPosition += jackGroup->GetChild( i )->GetWorldPosition();
+        }
         averageJackPosition /= ( float )numJacks;
     }
 
