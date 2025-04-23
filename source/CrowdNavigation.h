@@ -136,7 +136,7 @@ private:
     /// Handle crowd agent formation.
     void HandleCrowdAgentFormation( StringHash eventType, VariantMap& eventData );
     // 
-    void setNewPos(flost x, float y, float z);
+    void setNewPos(float x, float y, float z);
 public:
     /// Flag for using navigation mesh streaming.
     bool useStreaming_{};

@@ -674,7 +674,7 @@ void CrowdNavigation::HandleCrowdAgentFormation( StringHash eventType, VariantMa
     }
 }
 //
-void CrowdNavigation::setNewPos( flost x, float y, float z )
+void CrowdNavigation::setNewPos( float x, float y, float z )
 {
     hitPos.x_ = x;
     hitPos.y_ = y;
