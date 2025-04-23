@@ -314,33 +314,36 @@ void CrowdNavigation::CreateMovingBarrels( DynamicNavigationMesh* navMesh )
     barrel->Remove();
 }
 
-void CrowdNavigation::SetPathPoint( bool spawning )
+void CrowdNavigation::SetPathPoint( int spawning )
 {
-
-    if ( Raycast( 250.0f, hitPos, hitDrawable ) )
+    if ( spawning < 2 )
     {
-        auto*   navMesh   = scene_->GetComponent< DynamicNavigationMesh >();
-        Vector3 pathPos   = navMesh->FindNearestPoint( hitPos, Vector3( 1.0f, 1.0f, 1.0f ) );
-        Node*   jackGroup = scene_->GetChild( "Jacks" );
-        if ( spawning )
-        // Spawn a jack at the target position
+        if ( Raycast( 250.0f, hitPos, hitDrawable ) )
         {
-            SpawnJack( pathPos, jackGroup );
+            auto*   navMesh   = scene_->GetComponent< DynamicNavigationMesh >();
+            Vector3 pathPos   = navMesh->FindNearestPoint( hitPos, Vector3( 1.0f, 1.0f, 1.0f ) );
+            Node*   jackGroup = scene_->GetChild( "Jacks" );
+            if ( spawning == 1 )
+            // Spawn a jack at the target position
+            {
+                SpawnJack( pathPos, jackGroup );
+            }
+            else if ( spawning == 0 )
+            // Set crowd agents target position
+            {
+                scene_->GetComponent< CrowdManager >()->SetCrowdTarget( pathPos, jackGroup );
+            }
         }
-        else
-        // Set crowd agents target position
-        {
-            scene_->GetComponent< CrowdManager >()->SetCrowdTarget( pathPos, jackGroup );
-        }
+    }
+    else if ( spawning = 2 )
+    {
+        Node* jackGroup = scene_->GetChild( "Jacks" );
+        scene_->GetComponent< CrowdManager >()->SetCrowdTarget( hitPos, jackGroup );
     }
 }
 
 void CrowdNavigation::AddOrRemoveObject()
 {
-    // Raycast and check if we hit a mushroom node. If yes, remove it, if no, create a new one
-    Vector3   hitPos;
-    Drawable* hitDrawable;
-
     if ( Raycast( 250.0f, hitPos, hitDrawable ) )
     {
         Node* hitNode = hitDrawable->GetNode();
@@ -439,10 +442,19 @@ void CrowdNavigation::MoveCamera( float timeStep )
     {
         cameraNode_->Translate( Vector3::RIGHT * MOVE_SPEED * timeStep );
     }
+    else if ( input->GetKeyPress( KEY_K ) )
+    {
+        setNewPos( 0.0, 0.0, 0.0 );
+    }
     // Set destination or spawn a new jack with left mouse button
     if ( input->GetMouseButtonPress( MOUSEB_LEFT ) )
     {
-        SetPathPoint( input->GetQualifierDown( QUAL_SHIFT ) );
+        int spawning = 0;
+        if ( input->GetQualifierDown( QUAL_SHIFT ) )
+        {
+            spawning = 1;
+        }
+        SetPathPoint( spawning );
     }  // Add new obstacle or remove existing obstacle/agent with middle mouse button
     else if ( input->GetMouseButtonPress( MOUSEB_MIDDLE ) || input->GetKeyPress( KEY_O ) )
     {
@@ -660,4 +672,13 @@ void CrowdNavigation::HandleCrowdAgentFormation( StringHash eventType, VariantMa
         auto* agent             = static_cast< CrowdAgent* >( eventData[ P_CROWD_AGENT ].GetPtr() );
         eventData[ P_POSITION ] = crowdManager->GetRandomPointInCircle( position, agent->GetRadius(), agent->GetQueryFilterType() );
     }
+}
+//
+void CrowdNavigation::setNewPos( flost x, float y, float z )
+{
+    hitPos.x_ = x;
+    hitPos.y_ = y;
+    hitPos.z_ = z;
+    //
+    SetPathPoint( 2 );
 }

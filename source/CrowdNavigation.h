@@ -106,7 +106,7 @@ private:
     /// Read input and moves the camera.
     void MoveCamera( float timeStep );
     /// Set crowd agents target or spawn another jack.
-    void SetPathPoint( bool spawning );
+    void SetPathPoint( int spawning );
     /// Add new obstacle or remove existing obstacle/agent.
     void AddOrRemoveObject();
     /// Create a "Jack" object at position.
@@ -135,6 +135,8 @@ private:
     void HandleCrowdAgentReposition( StringHash eventType, VariantMap& eventData );
     /// Handle crowd agent formation.
     void HandleCrowdAgentFormation( StringHash eventType, VariantMap& eventData );
+    // 
+    void setNewPos(flost x, float y, float z);
 public:
     /// Flag for using navigation mesh streaming.
     bool useStreaming_{};
