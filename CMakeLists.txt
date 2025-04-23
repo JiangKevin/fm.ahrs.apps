@@ -21,6 +21,7 @@ file(GLOB app_src
     $ENV{FmDev}/source/*.cpp
     $ENV{FmDev}/source/*.inl
     $ENV{FmDev}/source/*/*.cpp
+    $ENV{FmDev}/source/*/*.inl
 )
 
 # 添加可执行文件
