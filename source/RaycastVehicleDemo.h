@@ -1,6 +1,3 @@
-// Copyright (c) 2008-2023 the Urho3D project
-// License: MIT
-
 #pragma once
 
 #include "BaseApp.h"
@@ -12,25 +9,17 @@ namespace Urho3D
 }
 
 class Vehicle;
-
-/// Vehicle example.
-/// This sample demonstrates:
-///     - Creating a heightmap terrain with collision
-///     - Constructing 100 raycast vehicles
-///     - Defining attributes (including node and component references) of a custom component
-///     (Saving and loading is broken now)
+//
 
 class RaycastVehicleDemo : public BaseApp
 {
-    URHO3D_OBJECT(RaycastVehicleDemo, BaseApp);
-
+    URHO3D_OBJECT( RaycastVehicleDemo, BaseApp );
 public:
     /// Construct.
-    explicit RaycastVehicleDemo(Context* context);
+    explicit RaycastVehicleDemo( Context* context );
 
     /// Setup after engine initialization and before running the main loop.
     void Start() override;
-
 private:
     /// Create static scene content.
     void CreateScene();
@@ -45,11 +34,11 @@ private:
     void SubscribeToEvents();
 
     /// Handle application update. Set controls to vehicle.
-    void HandleUpdate(StringHash eventType, VariantMap& eventData);
+    void HandleUpdate( StringHash eventType, VariantMap& eventData );
 
     /// Handle application post-update. Update camera position after vehicle has moved.
-    void HandlePostUpdate(StringHash eventType, VariantMap& eventData);
+    void HandlePostUpdate( StringHash eventType, VariantMap& eventData );
 
     /// The controllable vehicle component.
-    WeakPtr<Vehicle> vehicle_;
+    WeakPtr< Vehicle > vehicle_;
 };

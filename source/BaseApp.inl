@@ -1,6 +1,3 @@
-// Copyright (c) 2008-2023 the Urho3D project
-// License: MIT
-
 #include <Urho3D/Core/Timer.h>
 #include <Urho3D/Engine/Application.h>
 #include <Urho3D/Engine/Console.h>
@@ -209,17 +206,23 @@ void BaseApp::HandleKeyUp( StringHash /*eventType*/, VariantMap& eventData )
     {
         Console* console = GetSubsystem< Console >();
         if ( console->IsVisible() )
+        {
             console->SetVisible( false );
+        }
         else
         {
             if ( GetPlatform() == "Web" )
             {
                 GetSubsystem< Input >()->SetMouseVisible( true );
                 if ( useMouseMode_ != MM_ABSOLUTE )
+                {
                     GetSubsystem< Input >()->SetMouseMode( MM_FREE );
+                }
             }
             else
+            {
                 engine_->Exit();
+            }
         }
     }
 }
@@ -232,12 +235,14 @@ void BaseApp::HandleKeyDown( StringHash /*eventType*/, VariantMap& eventData )
 
     // Toggle console with F1
     if ( key == KEY_F1 )
+    {
         GetSubsystem< Console >()->Toggle();
-
+    }
     // Toggle debug HUD with F2
     else if ( key == KEY_F2 )
+    {
         GetSubsystem< DebugHud >()->ToggleAll();
-
+    }
     // Common rendering quality controls, only when UI has no focused element
     else if ( ! GetSubsystem< UI >()->GetFocusElement() )
     {
@@ -256,7 +261,9 @@ void BaseApp::HandleKeyDown( StringHash /*eventType*/, VariantMap& eventData )
                 screenJoystickSettingsIndex_ = ( unsigned )input->AddScreenJoystick( cache->GetResource< XMLFile >( "UI/ScreenJoystickSettings_Samples.xml" ), cache->GetResource< XMLFile >( "UI/DefaultStyle.xml" ) );
             }
             else
+            {
                 input->SetScreenJoystickVisible( screenJoystickSettingsIndex_, paused_ );
+            }
         }
 
         // Texture quality
@@ -265,7 +272,9 @@ void BaseApp::HandleKeyDown( StringHash /*eventType*/, VariantMap& eventData )
             auto quality = ( unsigned )renderer->GetTextureQuality();
             ++quality;
             if ( quality > QUALITY_HIGH )
+            {
                 quality = QUALITY_LOW;
+            }
             renderer->SetTextureQuality( ( MaterialQuality )quality );
         }
 
@@ -275,25 +284,31 @@ void BaseApp::HandleKeyDown( StringHash /*eventType*/, VariantMap& eventData )
             auto quality = ( unsigned )renderer->GetMaterialQuality();
             ++quality;
             if ( quality > QUALITY_HIGH )
+            {
                 quality = QUALITY_LOW;
+            }
             renderer->SetMaterialQuality( ( MaterialQuality )quality );
         }
 
         // Specular lighting
         else if ( key == '3' )
+        {
             renderer->SetSpecularLighting( ! renderer->GetSpecularLighting() );
-
+        }
         // Shadow rendering
         else if ( key == '4' )
+        {
             renderer->SetDrawShadows( ! renderer->GetDrawShadows() );
-
+        }
         // Shadow map resolution
         else if ( key == '5' )
         {
             int shadowMapSize = renderer->GetShadowMapSize();
             shadowMapSize *= 2;
             if ( shadowMapSize > 2048 )
+            {
                 shadowMapSize = 512;
+            }
             renderer->SetShadowMapSize( shadowMapSize );
         }
 
@@ -303,7 +318,9 @@ void BaseApp::HandleKeyDown( StringHash /*eventType*/, VariantMap& eventData )
             ShadowQuality quality = renderer->GetShadowQuality();
             quality               = ( ShadowQuality )( quality + 1 );
             if ( quality > SHADOWQUALITY_BLUR_VSM )
+            {
                 quality = SHADOWQUALITY_SIMPLE_16BIT;
+            }
             renderer->SetShadowQuality( quality );
         }
 
@@ -317,8 +334,9 @@ void BaseApp::HandleKeyDown( StringHash /*eventType*/, VariantMap& eventData )
 
         // Instancing
         else if ( key == '8' )
+        {
             renderer->SetDynamicInstancing( ! renderer->GetDynamicInstancing() );
-
+        }
         // Take screenshot
         else if ( key == '9' )
         {
@@ -346,8 +364,9 @@ void BaseApp::HandleSceneUpdate( StringHash /*eventType*/, VariantMap& eventData
                 {
                     Camera* camera = cameraNode_->GetComponent< Camera >();
                     if ( ! camera )
+                    {
                         return;
-
+                    }
                     Graphics* graphics = GetSubsystem< Graphics >();
                     yaw_ += TOUCH_SENSITIVITY * camera->GetFov() / graphics->GetHeight() * state->delta_.x_;
                     pitch_ += TOUCH_SENSITIVITY * camera->GetFov() / graphics->GetHeight() * state->delta_.y_;
@@ -360,7 +379,9 @@ void BaseApp::HandleSceneUpdate( StringHash /*eventType*/, VariantMap& eventData
                     // Move the cursor to the touch position
                     Cursor* cursor = GetSubsystem< UI >()->GetCursor();
                     if ( cursor && cursor->IsVisible() )
+                    {
                         cursor->SetPosition( state->position_ );
+                    }
                 }
             }
         }
@@ -379,12 +400,18 @@ void BaseApp::HandleMouseModeRequest( StringHash /*eventType*/, VariantMap& even
 {
     Console* console = GetSubsystem< Console >();
     if ( console && console->IsVisible() )
+    {
         return;
+    }
     Input* input = GetSubsystem< Input >();
     if ( useMouseMode_ == MM_ABSOLUTE )
+    {
         input->SetMouseVisible( false );
+    }
     else if ( useMouseMode_ == MM_FREE )
+    {
         input->SetMouseVisible( true );
+    }
     input->SetMouseMode( useMouseMode_ );
 }
 

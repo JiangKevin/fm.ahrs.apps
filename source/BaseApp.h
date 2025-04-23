@@ -1,6 +1,3 @@
-// Copyright (c) 2008-2023 the Urho3D project
-// License: MIT
-
 #pragma once
 
 #include <Urho3D/Engine/Application.h>
@@ -9,9 +6,9 @@
 namespace Urho3D
 {
 
-class Node;
-class Scene;
-class Sprite;
+    class Node;
+    class Scene;
+    class Sprite;
 
 }
 
@@ -33,11 +30,10 @@ const float TOUCH_SENSITIVITY = 2.0f;
 class BaseApp : public Application
 {
     // Enable type information.
-    URHO3D_OBJECT(BaseApp, Application);
-
+    URHO3D_OBJECT( BaseApp, Application );
 public:
     /// Construct.
-    explicit BaseApp(Context* context);
+    explicit BaseApp( Context* context );
 
     /// Setup before engine initialization. Modifies the engine parameters.
     void Setup() override;
@@ -45,23 +41,25 @@ public:
     void Start() override;
     /// Cleanup after the main loop. Called by Application.
     void Stop() override;
-
 protected:
     /// Return XML patch instructions for screen joystick layout for a specific sample app, if any.
-    virtual String GetScreenJoystickPatchString() const { return String::EMPTY; }
+    virtual String GetScreenJoystickPatchString() const
+    {
+        return String::EMPTY;
+    }
     /// Initialize touch input on mobile platform.
     void InitTouchInput();
     /// Initialize mouse mode on non-web platform.
-    void InitMouseMode(MouseMode mode);
+    void InitMouseMode( MouseMode mode );
     /// Control logo visibility.
-    void SetLogoVisible(bool enable);
+    void SetLogoVisible( bool enable );
 
     /// Logo sprite.
-    SharedPtr<Sprite> logoSprite_;
+    SharedPtr< Sprite > logoSprite_;
     /// Scene.
-    SharedPtr<Scene> scene_;
+    SharedPtr< Scene > scene_;
     /// Camera scene node.
-    SharedPtr<Node> cameraNode_;
+    SharedPtr< Node > cameraNode_;
     /// Camera yaw angle.
     float yaw_;
     /// Camera pitch angle.
@@ -70,7 +68,6 @@ protected:
     bool touchEnabled_;
     /// Mouse mode option to use in the sample.
     MouseMode useMouseMode_;
-
 private:
     /// Create logo.
     void CreateLogo();
@@ -79,17 +76,17 @@ private:
     /// Create console and debug HUD.
     void CreateConsoleAndDebugHud();
     /// Handle request for mouse mode on web platform.
-    void HandleMouseModeRequest(StringHash eventType, VariantMap& eventData);
+    void HandleMouseModeRequest( StringHash eventType, VariantMap& eventData );
     /// Handle request for mouse mode change on web platform.
-    void HandleMouseModeChange(StringHash eventType, VariantMap& eventData);
+    void HandleMouseModeChange( StringHash eventType, VariantMap& eventData );
     /// Handle key down event to process key controls common to all samples.
-    void HandleKeyDown(StringHash eventType, VariantMap& eventData);
+    void HandleKeyDown( StringHash eventType, VariantMap& eventData );
     /// Handle key up event to process key controls common to all samples.
-    void HandleKeyUp(StringHash eventType, VariantMap& eventData);
+    void HandleKeyUp( StringHash eventType, VariantMap& eventData );
     /// Handle scene update event to control camera's pitch and yaw for all samples.
-    void HandleSceneUpdate(StringHash eventType, VariantMap& eventData);
+    void HandleSceneUpdate( StringHash eventType, VariantMap& eventData );
     /// Handle touch begin event to initialize touch input on desktop platform.
-    void HandleTouchBegin(StringHash eventType, VariantMap& eventData);
+    void HandleTouchBegin( StringHash eventType, VariantMap& eventData );
 
     /// Screen joystick index for navigational controls (mobile platforms only).
     unsigned screenJoystickIndex_;
