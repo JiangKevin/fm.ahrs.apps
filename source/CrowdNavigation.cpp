@@ -476,6 +476,10 @@ void CrowdNavigation::MoveCamera( float timeStep )
     else if ( input->GetKeyPress( KEY_SPACE ) )
     {
         drawDebug_ = ! drawDebug_;
+        if ( instructionText_ )
+        {
+            instructionText_->SetVisible( ! instructionText_->IsVisible() );
+        }
     }
     // Toggle instruction text with F12
     else if ( input->GetKeyPress( KEY_F12 ) )
