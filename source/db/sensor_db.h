@@ -39,7 +39,7 @@ static void* read_sensor( void* arg )
         pArg->sensor_data->mag_y = y;
         pArg->sensor_data->mag_z = z;
         //
-        std::cout << "Magnetic field: x = " << x << " uT, y = " << y << " uT, z = " << z << " uT, all = " << std::sqrt( std::pow( x, 2 ) + std::pow( y, 2 ) + std::pow( z, 2 ) ) << " uT" << std::endl;
+        // std::cout << "Magnetic field: x = " << x << " uT, y = " << y << " uT, z = " << z << " uT, all = " << std::sqrt( std::pow( x, 2 ) + std::pow( y, 2 ) + std::pow( z, 2 ) ) << " uT" << std::endl;
     }
 
     float temp = pArg->sensor_mmc->readTemperature();
@@ -64,14 +64,14 @@ static void* read_sensor( void* arg )
     pArg->sensor_data->gyro_y = imu_event.gyro[ 1 ] / 16.4;
     pArg->sensor_data->gyro_z = imu_event.gyro[ 2 ] / 16.4;
     // Format data for Serial Plotter
-    printf( "AccelX:%f,", imu_event.accel[ 0 ] / 2048.0 );
-    printf( "AccelY:%f,", imu_event.accel[ 1 ] / 2048.0 );
-    printf( "AccelZ:%f,", imu_event.accel[ 2 ] / 2048.0 );
-    printf( "GyroX:%f,", imu_event.gyro[ 0 ] / 16.4 );
-    printf( "GyroY:%f,", imu_event.gyro[ 1 ] / 16.4 );
-    printf( "GyroZ:%f,", imu_event.gyro[ 2 ] / 16.4 );
-    printf( "Temperature:%f", ( imu_event.temperature / 128.0 ) + 25.0 );
-    printf( "\n" );
+    // printf( "AccelX:%f,", imu_event.accel[ 0 ] / 2048.0 );
+    // printf( "AccelY:%f,", imu_event.accel[ 1 ] / 2048.0 );
+    // printf( "AccelZ:%f,", imu_event.accel[ 2 ] / 2048.0 );
+    // printf( "GyroX:%f,", imu_event.gyro[ 0 ] / 16.4 );
+    // printf( "GyroY:%f,", imu_event.gyro[ 1 ] / 16.4 );
+    // printf( "GyroZ:%f,", imu_event.gyro[ 2 ] / 16.4 );
+    // printf( "Temperature:%f", ( imu_event.temperature / 128.0 ) + 25.0 );
+    // printf( "\n" );
 
     // Run @ ODR 100Hz
     std::this_thread::sleep_for( std::chrono::milliseconds( 10 ) );
