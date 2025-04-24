@@ -12,6 +12,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY $ENV{FmDev}/bin)
 include_directories($ENV{FmDev}/libs/urho3d/include)
 include_directories($ENV{FmDev}/libs/urho3d/include/Urho3D/ThirdParty)
 include_directories($ENV{FmDev}/source)
+include_directories($ENV{FmDev}/source/device)
 include_directories($ENV{FmDev}/source/device/TDK40607P)
 include_directories($ENV{FmDev}/libs/libgpiod/include)
 
@@ -20,7 +21,6 @@ include_directories($ENV{FmDev}/libs/libgpiod/include)
 find_package(OpenGL REQUIRED)
 find_path(RAPIDCSV_INCLUDE_DIRS "rapidcsv.h")
 # 
-# add_subdirectory(source/device/TDK40607P)
 # 查找源文件
 file(GLOB app_src
     $ENV{FmDev}/source/*.cpp

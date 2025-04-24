@@ -1,7 +1,9 @@
 #pragma once
 //
+#include "MMC56x3/MMC56x3.h"
+#include "TDK40607P/ICM42670P.h"
 #include "base/BaseApp.h"
-#include "device/MMC5603NJ/fm_mmc5603nj.h"
+#include "db/sensor_db.h"
 //
 namespace Urho3D
 {
@@ -137,9 +139,9 @@ private:
     //
     void setNewPos( float x, float y, float z );
     //
-    void initMagnetometer();
-    // 
-    void readMagnetometer();
+    void init_sensor();
+    //
+    // void read_sensor();
 public:
     /// Flag for using navigation mesh streaming.
     bool useStreaming_{};
@@ -157,7 +159,10 @@ public:
     Vector3   hitPos;
     Drawable* hitDrawable;
 public:
-    fm_mmc5603nj*     magnetometer_;
-    const std::string i2cDevice_mmc     = "/dev/i2c-1";
+    const std::string i2cDevice         = "/dev/i2c-1";
     uint8_t           deviceAddress_mmc = 0x30;
+    uint8_t           deviceAddress_imu = 0x69;
+    //
+    MMC56x3  sensor_mmc_;
+    ICM42670 sensor_imu_;
 };

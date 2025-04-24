@@ -8,7 +8,8 @@ extern "C" {
 #include <stddef.h>
 #undef ICM42670
 }
-
+//
+#define ICM42670_I2C_ADDRESS 0x69
 // This defines the handler called when retrieving a sample from the FIFO
 typedef void ( *ICM42670_sensor_event_cb )( inv_imu_sensor_event_t* event );
 // This defines the handler called when receiving an irq
@@ -20,7 +21,7 @@ public:
     ICM42670();
     ~ICM42670();
 
-    int  begin( bool type = false );
+    int  begin( bool type = false, uint8_t i2c_addr = ICM42670_I2C_ADDRESS, const char* i2c_device = "/dev/i2c-1" );
     int  startAccel( uint16_t odr, uint16_t fsr );
     int  startGyro( uint16_t odr, uint16_t fsr );
     int  getDataFromRegisters( inv_imu_sensor_event_t& evt );

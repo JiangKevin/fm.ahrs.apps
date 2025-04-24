@@ -31,6 +31,10 @@
 #include "CrowdNavigation.h"
 #include <Urho3D/DebugNew.h>
 //
+
+// ----------------------------------------------------------------------
+
+//
 URHO3D_DEFINE_APPLICATION_MAIN( CrowdNavigation )
 //
 CrowdNavigation::CrowdNavigation( Context* context ) : BaseApp( context ) {}
@@ -55,7 +59,7 @@ void CrowdNavigation::Start()
     // Set the mouse mode to use in the sample
     BaseApp::InitMouseMode( MM_ABSOLUTE );
     //
-    initMagnetometer();
+    init_sensor();
 }
 
 void CrowdNavigation::CreateScene()
@@ -599,7 +603,14 @@ void CrowdNavigation::HandleUpdate( StringHash eventType, VariantMap& eventData 
         UpdateStreaming();
     }
     //
-    readMagnetometer();
+    // 创建一个新线程并启动函数
+    pthread_t                   read_sensor_thread_id;
+    static struct sensor_device mPara;
+    mPara.sensor_imu   = &sensor_imu_;
+    mPara.sensor_mmc  = &sensor_mmc_;
+    pthread_create( &read_sensor_thread_id, NULL, read_sensor, &( mPara ) );
+    // 分离线程，使其在后台独立运行
+    pthread_detach( read_sensor_thread_id );
 }
 
 void CrowdNavigation::HandlePostRenderUpdate( StringHash eventType, VariantMap& eventData )
@@ -698,22 +709,24 @@ void CrowdNavigation::setNewPos( float x, float y, float z )
     SetPathPoint( 2 );
 }
 //
-void CrowdNavigation::initMagnetometer()
+void CrowdNavigation::init_sensor()
 {
-    magnetometer_ = new fm_mmc5603nj( i2cDevice_mmc, deviceAddress_mmc );
-    magnetometer_->begin();
-}
-//
-void CrowdNavigation::readMagnetometer()
-{
-    // 读取地磁仪数据
-    float magX, magY, magZ, magAbs;
-    magnetometer_->getMilliGauss( &magX, &magY, &magZ, &magAbs );
-    // 打印结果
-    std::cout << "Magnetic Field (mG):" << std::endl;
-    // 打印结果
-    std::cout << "X: " << magX << " mG "
-              << "Y: " << magY << " mG "
-              << "Z: " << magZ << " mG "
-              << "Absolute: " << magAbs << " mG" << std::endl;
+    // Initializing the MMC56x3
+    if ( ! sensor_mmc_.begin( deviceAddress_mmc, i2cDevice.c_str() ) )
+    {
+        std::cerr << "Failed to initialize MMC56x3 sensor" << std::endl;
+    }
+    // Initializing the ICM42670
+    int ret;
+    ret = sensor_imu_.begin( false, deviceAddress_imu, i2cDevice.c_str() );
+    if ( ret != 0 )
+    {
+        std::cerr << "ICM42670 initialization failed: " << std::endl;
+    }
+    // Accel ODR = 100 Hz and Full Scale Range = 16G
+    sensor_imu_.startAccel( 100, 16 );
+    // Gyro ODR = 100 Hz and Full Scale Range = 2000 dps
+    sensor_imu_.startGyro( 100, 2000 );
+    // Wait IMU to start
+    std::this_thread::sleep_for( std::chrono::milliseconds( 100 ) );
 }

@@ -39,7 +39,6 @@ static const char* APEX_ACTIVITY[ 3 ] = { "IDLE", "WALK", "RUN" };
 // i2c
 #define I2C_DEFAULT_CLOCK         400000
 #define I2C_MAX_CLOCK             1000000
-#define ICM42670_I2C_ADDRESS      0x69
 #define ARDUINO_I2C_BUFFER_LENGTH 32
 // spi
 #define SPI_READ          0x80
@@ -119,7 +118,7 @@ bool ICM42670::open_spi_device( const char* spi_device, uint8_t mode, uint32_t s
 void ICM42670::close_spi_device() {}
 
 /* starts communication with the ICM42670 */
-int ICM42670::begin( bool type )
+int ICM42670::begin( bool type, uint8_t i2c_addr, const char* i2c_device )
 {
     struct inv_imu_serif      icm_serif;
     int                       rc = 0;
