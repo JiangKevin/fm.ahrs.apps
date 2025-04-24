@@ -1,14 +1,13 @@
 #pragma once
-
+//
 #include "base/BaseApp.h"
-
+#include "device/MMC5603NJ/fm_mmc5603nj.h"
+//
 namespace Urho3D
 {
-
     class Drawable;
     class Node;
     class Scene;
-
 }
 
 //
@@ -135,8 +134,12 @@ private:
     void HandleCrowdAgentReposition( StringHash eventType, VariantMap& eventData );
     /// Handle crowd agent formation.
     void HandleCrowdAgentFormation( StringHash eventType, VariantMap& eventData );
+    //
+    void setNewPos( float x, float y, float z );
+    //
+    void initMagnetometer();
     // 
-    void setNewPos(float x, float y, float z);
+    void readMagnetometer();
 public:
     /// Flag for using navigation mesh streaming.
     bool useStreaming_{};
@@ -153,4 +156,8 @@ public:
     //
     Vector3   hitPos;
     Drawable* hitDrawable;
+public:
+    fm_mmc5603nj*     magnetometer_;
+    const std::string i2cDevice_mmc     = "/dev/i2c-1";
+    uint8_t           deviceAddress_mmc = 0x30;
 };

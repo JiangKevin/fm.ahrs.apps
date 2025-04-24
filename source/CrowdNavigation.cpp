@@ -1,3 +1,4 @@
+#include "io/unit_conversion.h"
 #include <Urho3D/Core/CoreEvents.h>
 #include <Urho3D/Engine/Engine.h>
 #include <Urho3D/Graphics/AnimatedModel.h>
@@ -25,7 +26,7 @@
 #include <Urho3D/UI/Font.h>
 #include <Urho3D/UI/Text.h>
 #include <Urho3D/UI/UI.h>
-
+#include <iostream>
 //
 #include "CrowdNavigation.h"
 #include <Urho3D/DebugNew.h>
@@ -53,6 +54,8 @@ void CrowdNavigation::Start()
 
     // Set the mouse mode to use in the sample
     BaseApp::InitMouseMode( MM_ABSOLUTE );
+    //
+    initMagnetometer();
 }
 
 void CrowdNavigation::CreateScene()
@@ -595,6 +598,8 @@ void CrowdNavigation::HandleUpdate( StringHash eventType, VariantMap& eventData 
     {
         UpdateStreaming();
     }
+    //
+    readMagnetometer();
 }
 
 void CrowdNavigation::HandlePostRenderUpdate( StringHash eventType, VariantMap& eventData )
@@ -605,6 +610,12 @@ void CrowdNavigation::HandlePostRenderUpdate( StringHash eventType, VariantMap& 
         scene_->GetComponent< DynamicNavigationMesh >()->DrawDebugGeometry( true );
         // Visualize agents' path and position to reach
         scene_->GetComponent< CrowdManager >()->DrawDebugGeometry( true );
+    }
+    else
+    {
+        // Visualize the current calculated path
+        auto* debug = scene_->GetComponent< DebugRenderer >();
+        debug->AddSphere( Sphere( Vector3( 0.0f, 0.0f, 0.0f ), 0.1f ), Color( 1.0f, 1.0f, 1.0f ) );
     }
 }
 
@@ -685,4 +696,24 @@ void CrowdNavigation::setNewPos( float x, float y, float z )
     hitPos.z_ = z;
     //
     SetPathPoint( 2 );
+}
+//
+void CrowdNavigation::initMagnetometer()
+{
+    magnetometer_ = new fm_mmc5603nj( i2cDevice_mmc, deviceAddress_mmc );
+    magnetometer_->begin();
+}
+//
+void CrowdNavigation::readMagnetometer()
+{
+    // 读取地磁仪数据
+    float magX, magY, magZ, magAbs;
+    magnetometer_->getMilliGauss( &magX, &magY, &magZ, &magAbs );
+    // 打印结果
+    std::cout << "Magnetic Field (mG):" << std::endl;
+    // 打印结果
+    std::cout << "X: " << magX << " mG "
+              << "Y: " << magY << " mG "
+              << "Z: " << magZ << " mG "
+              << "Absolute: " << magAbs << " mG" << std::endl;
 }
