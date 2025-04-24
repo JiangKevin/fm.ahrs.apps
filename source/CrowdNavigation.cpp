@@ -606,8 +606,9 @@ void CrowdNavigation::HandleUpdate( StringHash eventType, VariantMap& eventData 
     // 创建一个新线程并启动函数
     pthread_t                   read_sensor_thread_id;
     static struct sensor_device mPara;
-    mPara.sensor_imu   = &sensor_imu_;
+    mPara.sensor_imu  = &sensor_imu_;
     mPara.sensor_mmc  = &sensor_mmc_;
+    mPara.sensor_data = &sensor_data_;
     pthread_create( &read_sensor_thread_id, NULL, read_sensor, &( mPara ) );
     // 分离线程，使其在后台独立运行
     pthread_detach( read_sensor_thread_id );

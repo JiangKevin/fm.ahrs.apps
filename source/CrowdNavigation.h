@@ -163,6 +163,7 @@ public:
     uint8_t           deviceAddress_mmc = 0x30;
     uint8_t           deviceAddress_imu = 0x69;
     //
-    MMC56x3  sensor_mmc_;
-    ICM42670 sensor_imu_;
+    MMC56x3   sensor_mmc_;
+    ICM42670  sensor_imu_;
+    sensor_db sensor_data_;
 };

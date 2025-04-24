@@ -22,8 +22,9 @@ struct sensor_db
 };
 struct sensor_device
 {
-    MMC56x3*  sensor_mmc;
-    ICM42670* sensor_imu;
+    MMC56x3*   sensor_mmc;
+    ICM42670*  sensor_imu;
+    sensor_db* sensor_data;
 };
 
 // ----------------------------------------------------------------------
