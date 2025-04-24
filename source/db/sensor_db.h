@@ -35,6 +35,10 @@ static void* read_sensor( void* arg )
     float x, y, z;
     if ( pArg->sensor_mmc->getEvent( x, y, z ) )
     {
+        pArg->sensor_data->mag_x = x;
+        pArg->sensor_data->mag_y = y;
+        pArg->sensor_data->mag_z = z;
+        //
         std::cout << "Magnetic field: x = " << x << " uT, y = " << y << " uT, z = " << z << " uT, all = " << std::sqrt( std::pow( x, 2 ) + std::pow( y, 2 ) + std::pow( z, 2 ) ) << " uT" << std::endl;
     }
 
@@ -52,7 +56,13 @@ static void* read_sensor( void* arg )
 
     // Get last event
     pArg->sensor_imu->getDataFromRegisters( imu_event );
-
+    //
+    pArg->sensor_data->acc_x  = imu_event.accel[ 0 ] / 2048.0;
+    pArg->sensor_data->acc_y  = imu_event.accel[ 1 ] / 2048.0;
+    pArg->sensor_data->acc_z  = imu_event.accel[ 2 ] / 2048.0;
+    pArg->sensor_data->gyro_x = imu_event.gyro[ 0 ] / 16.4;
+    pArg->sensor_data->gyro_y = imu_event.gyro[ 1 ] / 16.4;
+    pArg->sensor_data->gyro_z = imu_event.gyro[ 2 ] / 16.4;
     // Format data for Serial Plotter
     printf( "AccelX:%f,", imu_event.accel[ 0 ] / 2048.0 );
     printf( "AccelY:%f,", imu_event.accel[ 1 ] / 2048.0 );
