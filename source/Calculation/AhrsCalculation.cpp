@@ -39,6 +39,13 @@ void AhrsCalculation::SolveAnCalculation( SENSOR_DB* sensor_data )
     // Print algorithm outputs
     const FusionEuler  euler = FusionQuaternionToEuler( FusionAhrsGetQuaternion( &ahrs ) );
     const FusionVector earth = FusionAhrsGetEarthAcceleration( &ahrs );
-
-    printf( "Roll %0.1f, Pitch %0.1f, Yaw %0.1f, X %0.1f, Y %0.1f, Z %0.1f\n", euler.angle.roll, euler.angle.pitch, euler.angle.yaw, earth.axis.x, earth.axis.y, earth.axis.z );
+    //
+    sensor_data->roll  = euler.angle.roll;
+    sensor_data->pitch = euler.angle.pitch;
+    sensor_data->yaw   = euler.angle.yaw;
+    sensor_data->pos_x = earth.axis.x;
+    sensor_data->pos_y = earth.axis.y;
+    sensor_data->pos_z = earth.axis.z;
+    //
+    // printf( "Roll %0.1f, Pitch %0.1f, Yaw %0.1f, X %0.1f, Y %0.1f, Z %0.1f\n", euler.angle.roll, euler.angle.pitch, euler.angle.yaw, earth.axis.x, earth.axis.y, earth.axis.z );
 }

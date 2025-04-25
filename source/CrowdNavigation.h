@@ -155,17 +155,22 @@ public:
     bool drawDebug_{};
     /// Instruction text UI-element.
     Text* instructionText_{};
+    Text* infoText_{};
     //
     Vector3   hitPos;
     Drawable* hitDrawable;
     Node*     axes_node;
 public:
-    bool              mul_views_{false};
+    bool              mul_views_{ false };
     const std::string i2cDevice         = "/dev/i2c-1";
     uint8_t           deviceAddress_mmc = 0x30;
     uint8_t           deviceAddress_imu = 0x69;
     //
-    MMC56x3                  sensor_mmc_;
-    ICM42670                 sensor_imu_;
+    MMC56x3         sensor_mmc_;
+    ICM42670        sensor_imu_;
+    AhrsCalculation ahrs_calculation_;
+    //
     std::vector< SENSOR_DB > sensor_data_list_;
+    // 
+    
 };
