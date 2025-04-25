@@ -65,12 +65,8 @@ static void* read_sensor( void* arg )
     //
     pArg->ahrs_calculation->SolveAnCalculation( pArg->sensor_data );
     //
-    info += "Roll: " + String( pArg->sensor_data->roll ) + "\n";
-    info += "Pitch: " + String( pArg->sensor_data->pitch ) + "\n";
-    info += "Yaw: " + String( pArg->sensor_data->yaw ) + "\n";
-    info += "Pos X: " + String( pArg->sensor_data->pos_x ) + "\n";
-    info += "Pos Y: " + String( pArg->sensor_data->pos_y ) + "\n";
-    info += "Pos Z: " + String( pArg->sensor_data->pos_z ) + "\n";
+    info += "Roll: " + String( pArg->sensor_data->roll ) + " Pitch: " + String( pArg->sensor_data->pitch ) + " Yaw: " + String( pArg->sensor_data->yaw ) + "\n";
+    info += "Pos X: " + String( pArg->sensor_data->pos_x ) + " Pos Y: " + String( pArg->sensor_data->pos_y ) + " Pos Z: " + String( pArg->sensor_data->pos_z ) + "\n";
     //
     pArg->infoText->SetText( info );
     // Run @ ODR 100Hz
