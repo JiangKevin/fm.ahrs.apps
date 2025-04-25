@@ -141,7 +141,7 @@ private:
     //
     void init_sensor();
     //
-    // void read_sensor();
+    void read_sensor_start();
 public:
     /// Flag for using navigation mesh streaming.
     bool useStreaming_{};
@@ -158,12 +158,14 @@ public:
     //
     Vector3   hitPos;
     Drawable* hitDrawable;
+    Node*     axes_node;
 public:
+    bool              mul_views_{false};
     const std::string i2cDevice         = "/dev/i2c-1";
     uint8_t           deviceAddress_mmc = 0x30;
     uint8_t           deviceAddress_imu = 0x69;
     //
-    MMC56x3   sensor_mmc_;
-    ICM42670  sensor_imu_;
-    sensor_db sensor_data_;
+    MMC56x3                  sensor_mmc_;
+    ICM42670                 sensor_imu_;
+    std::vector< sensor_db > sensor_data_list_;
 };

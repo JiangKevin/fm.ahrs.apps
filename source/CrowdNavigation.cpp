@@ -87,7 +87,7 @@ void CrowdNavigation::CreateScene()
     zone->SetAmbientColor( Color( 0.15f, 0.15f, 0.15f ) );
     zone->SetFogColor( Color( 0.5f, 0.5f, 0.7f ) );
     zone->SetFogStart( 100.0f );
-    zone->SetFogEnd( 300.0f );
+    zone->SetFogEnd( 500.0f );
 
     // Create a directional light to the world. Enable cascaded shadows on it
     Node* lightNode = scene_->CreateChild( "DirectionalLight" );
@@ -101,21 +101,16 @@ void CrowdNavigation::CreateScene()
 
     // Create randomly sized boxes. If boxes are big enough, make them occluders
     Node* boxGroup = scene_->CreateChild( "Boxes" );
-    for ( unsigned i = 0; i < 20; ++i )
-    {
-        Node* boxNode = boxGroup->CreateChild( "Box" );
-        float size    = 1.0f + Random( 10.0f );
-        boxNode->SetPosition( Vector3( Random( 80.0f ) - 40.0f, size * 0.5f, Random( 80.0f ) - 40.0f ) );
-        boxNode->SetScale( size );
-        auto* boxObject = boxNode->CreateComponent< StaticModel >();
-        boxObject->SetModel( cache->GetResource< Model >( "Models/Box.mdl" ) );
-        boxObject->SetMaterial( cache->GetResource< Material >( "Materials/Stone.xml" ) );
-        boxObject->SetCastShadows( true );
-        if ( size >= 3.0f )
-        {
-            boxObject->SetOccluder( true );
-        }
-    }
+    //
+    axes_node = scene_->CreateChild( "Axes" );
+    axes_node->SetPosition( Vector3( 0.0f, 10.0f, 0.0f ) );
+    axes_node->SetScale( Vector3( 0.1f, 0.1f, 0.1f ) );
+    auto* axes_obj = axes_node->CreateComponent< StaticModel >();
+    axes_obj->SetModel( cache->GetResource< Model >( "axes.mdl" ) );
+    axes_obj->ApplyMaterialList();
+    // axes_obj->SetMaterial( cache->GetResource< Material >( "axes.xml" ) );
+    axes_obj->SetCastShadows( true );
+    //
 
     // Create a DynamicNavigationMesh component to the scene root
     auto* navMesh = scene_->CreateComponent< DynamicNavigationMesh >();
@@ -144,11 +139,6 @@ void CrowdNavigation::CreateScene()
     // Creating connections post-build here allows us to use FindNearestPoint() to procedurally set accurate positions for the connection
     CreateBoxOffMeshConnections( navMesh, boxGroup );
 
-    // // Create some mushrooms as obstacles. Note that obstacles are non-walkable areas
-    // for ( unsigned i = 0; i < 100; ++i )
-    // {
-    //     CreateMushroom( Vector3( Random( 90.0f ) - 45.0f, 0.0f, Random( 90.0f ) - 45.0f ) );
-    // }
     // Create a CrowdManager component to the scene root
     auto*                        crowdManager = scene_->CreateComponent< CrowdManager >();
     CrowdObstacleAvoidanceParams params       = crowdManager->GetObstacleAvoidanceParams( 0 );
@@ -175,6 +165,14 @@ void CrowdNavigation::CreateScene()
     cameraNode_->SetPosition( Vector3( 0.0f, 50.0f, 0.0f ) );
     pitch_ = 90.0f;
     cameraNode_->SetRotation( Quaternion( pitch_, yaw_, 0.0f ) );
+
+    MainCameraNode_  = new Node( context_ );
+    auto* mainCamera = MainCameraNode_->CreateComponent< Camera >();
+    camera->SetFarClip( 500.0f );
+
+    // Set an initial position for the camera scene node above the plane and looking down
+    MainCameraNode_->SetPosition( Vector3( 0.0f, 10.0f, 10.0f ) );
+    MainCameraNode_->SetRotation( Quaternion( 0, 0, 0.0f ) );
 }
 
 void CrowdNavigation::CreateUI()
@@ -210,15 +208,26 @@ void CrowdNavigation::CreateUI()
     instructionText_->SetHorizontalAlignment( HA_CENTER );
     instructionText_->SetVerticalAlignment( VA_CENTER );
     instructionText_->SetPosition( 0, ui->GetRoot()->GetHeight() / 4 );
+    instructionText_->SetVisible( false );
 }
 
 void CrowdNavigation::SetupViewport()
 {
+    auto* graphics = GetSubsystem< Graphics >();
     auto* renderer = GetSubsystem< Renderer >();
-
-    // Set up a viewport to the Renderer subsystem so that the 3D scene can be seen
-    SharedPtr< Viewport > viewport( new Viewport( context_, scene_, cameraNode_->GetComponent< Camera >() ) );
-    renderer->SetViewport( 0, viewport );
+    if ( mul_views_ )
+    {
+        renderer->SetNumViewports( 2 );
+    }
+    // Set up the front camera viewport
+    SharedPtr< Viewport > MainViewport( new Viewport( context_, scene_, MainCameraNode_->GetComponent< Camera >() ) );
+    renderer->SetViewport( 0, MainViewport );
+    //
+    if ( mul_views_ )
+    {
+        SharedPtr< Viewport > rearViewport( new Viewport( context_, scene_, cameraNode_->GetComponent< Camera >(), IntRect( graphics->GetWidth() * 2 / 3, 0, graphics->GetWidth(), graphics->GetHeight() / 3 ) ) );
+        renderer->SetViewport( 1, rearViewport );
+    }
 }
 
 void CrowdNavigation::SubscribeToEvents()
@@ -436,18 +445,22 @@ void CrowdNavigation::MoveCamera( float timeStep )
     if ( input->GetKeyDown( KEY_W ) || input->GetKeyDown( KEY_UP ) )
     {
         cameraNode_->Translate( Vector3::FORWARD * MOVE_SPEED * timeStep );
+        MainCameraNode_->Translate( Vector3::FORWARD * MOVE_SPEED * timeStep );
     }
     if ( input->GetKeyDown( KEY_S ) || input->GetKeyDown( KEY_DOWN ) )
     {
         cameraNode_->Translate( Vector3::BACK * MOVE_SPEED * timeStep );
+        MainCameraNode_->Translate( Vector3::BACK * MOVE_SPEED * timeStep );
     }
     if ( input->GetKeyDown( KEY_A ) || input->GetKeyDown( KEY_LEFT ) )
     {
         cameraNode_->Translate( Vector3::LEFT * MOVE_SPEED * timeStep );
+        MainCameraNode_->Translate( Vector3::LEFT * MOVE_SPEED * timeStep );
     }
     if ( input->GetKeyDown( KEY_D ) || input->GetKeyDown( KEY_RIGHT ) )
     {
         cameraNode_->Translate( Vector3::RIGHT * MOVE_SPEED * timeStep );
+        MainCameraNode_->Translate( Vector3::RIGHT * MOVE_SPEED * timeStep );
     }
     else if ( input->GetKeyPress( KEY_K ) )
     {
@@ -496,6 +509,8 @@ void CrowdNavigation::MoveCamera( float timeStep )
             instructionText_->SetVisible( ! instructionText_->IsVisible() );
         }
     }
+    //
+    axes_node->SetPosition( Vector3( MainCameraNode_->GetPosition().x_, MainCameraNode_->GetPosition().y_, MainCameraNode_->GetPosition().z_ + 150.0f ) );
 }
 
 void CrowdNavigation::ToggleStreaming( bool enabled )
@@ -603,15 +618,7 @@ void CrowdNavigation::HandleUpdate( StringHash eventType, VariantMap& eventData 
         UpdateStreaming();
     }
     //
-    // 创建一个新线程并启动函数
-    pthread_t                   read_sensor_thread_id;
-    static struct sensor_device mPara;
-    mPara.sensor_imu  = &sensor_imu_;
-    mPara.sensor_mmc  = &sensor_mmc_;
-    mPara.sensor_data = &sensor_data_;
-    pthread_create( &read_sensor_thread_id, NULL, read_sensor, &( mPara ) );
-    // 分离线程，使其在后台独立运行
-    pthread_detach( read_sensor_thread_id );
+    read_sensor_start();
 }
 
 void CrowdNavigation::HandlePostRenderUpdate( StringHash eventType, VariantMap& eventData )
@@ -730,4 +737,20 @@ void CrowdNavigation::init_sensor()
     sensor_imu_.startGyro( 100, 2000 );
     // Wait IMU to start
     std::this_thread::sleep_for( std::chrono::milliseconds( 100 ) );
+}
+//
+void CrowdNavigation::read_sensor_start()
+{
+    sensor_db sdb;
+    sensor_data_list_.push_back( sdb );
+    int sensor_data_list_size = sensor_data_list_.size();
+    // 创建一个新线程并启动函数
+    pthread_t                   read_sensor_thread_id;
+    static struct sensor_device mPara;
+    mPara.sensor_imu  = &sensor_imu_;
+    mPara.sensor_mmc  = &sensor_mmc_;
+    mPara.sensor_data = &sensor_data_list_[ sensor_data_list_size - 1 ];
+    pthread_create( &read_sensor_thread_id, NULL, read_sensor, &( mPara ) );
+    // 分离线程，使其在后台独立运行
+    pthread_detach( read_sensor_thread_id );
 }

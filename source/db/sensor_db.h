@@ -19,6 +19,9 @@ struct sensor_db
     float roll;
     float pitch;
     float yaw;
+    float pos_x;
+    float pos_y;
+    float pos_z;
 };
 struct sensor_device
 {
@@ -45,7 +48,7 @@ static void* read_sensor( void* arg )
     float temp = pArg->sensor_mmc->readTemperature();
     if ( ! std::isnan( temp ) )
     {
-        std::cout << "Temperature: " << temp << " C" << std::endl;
+        // std::cout << "Temperature: " << temp << " C" << std::endl;
     }
     else
     {
