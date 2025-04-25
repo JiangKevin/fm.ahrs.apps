@@ -741,7 +741,7 @@ void CrowdNavigation::init_sensor()
 //
 void CrowdNavigation::read_sensor_start()
 {
-    sensor_db sdb;
+    SENSOR_DB sdb;
     sensor_data_list_.push_back( sdb );
     int sensor_data_list_size = sensor_data_list_.size();
     // 创建一个新线程并启动函数

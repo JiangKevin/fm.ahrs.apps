@@ -3,7 +3,7 @@
 #include "MMC56x3/MMC56x3.h"
 #include "TDK40607P/ICM42670P.h"
 #include "base/BaseApp.h"
-#include "db/sensor_db.h"
+#include "thread/thread_callback.h"
 //
 namespace Urho3D
 {
@@ -167,5 +167,5 @@ public:
     //
     MMC56x3                  sensor_mmc_;
     ICM42670                 sensor_imu_;
-    std::vector< sensor_db > sensor_data_list_;
+    std::vector< SENSOR_DB > sensor_data_list_;
 };
