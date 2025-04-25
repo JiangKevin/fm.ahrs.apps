@@ -1,17 +1,13 @@
 #include "AhrsCalculation.h"
 #include <cstdio>
 #include <time.h>
-
 //
-AhrsCalculation::AhrsCalculation( /* args */ )
+// 带 Context* 参数的构造函数实现
+AhrsCalculation::AhrsCalculation( Urho3D::Context* context ) : Urho3D::Object( context )
 {
     FusionAhrsSetSettings( &ahrs, &settings );
 }
-//
-AhrsCalculation::~AhrsCalculation()
-{
-    //
-}
+
 //
 void AhrsCalculation::SolveAnCalculation( SENSOR_DB* sensor_data )
 {
@@ -52,5 +48,9 @@ void AhrsCalculation::SolveAnCalculation( SENSOR_DB* sensor_data )
         sensor_data->pos_z = earth.axis.z;
     }
     //
+    // // 步骤2: 发送自定义事件
+    // VariantMap& eventData                        = GetEventDataMap();
+    // eventData[ AhrsCalculationEvent::P_MESSAGE ] = "Hello from custom event!";
+    // SendEvent( E_AHRSCALCULATION_EVENT, eventData );
     // printf( "Roll %0.1f, Pitch %0.1f, Yaw %0.1f, X %0.1f, Y %0.1f, Z %0.1f\n", euler.angle.roll, euler.angle.pitch, euler.angle.yaw, earth.axis.x, earth.axis.y, earth.axis.z );
 }

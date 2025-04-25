@@ -3,9 +3,11 @@
 #pragma once
 //
 #include "Fusion/Fusion.h"
+#include "Urho3D/Core/Object.h"
+#include <Urho3D/Core/CoreEvents.h>
+#include <cctype>
 #include <iostream>
 #include <string>
-#include <cctype>
 //
 #define SAMPLE_RATE ( 100 )  // replace this with actual sample rate
 //
@@ -42,13 +44,13 @@ static bool isNumber( const std::string& str )
     return true;
 }
 //
-class AhrsCalculation
+using namespace Urho3D;
+//
+class AhrsCalculation : public Urho3D::Object
 {
-private:
-    /* data */
+    URHO3D_OBJECT( AhrsCalculation, Urho3D::Object )
 public:
-    AhrsCalculation( /* args */ );
-    ~AhrsCalculation();
+    explicit AhrsCalculation( Context* context );
 public:
     // Define calibration (replace with actual calibration data if available)
     const FusionMatrix gyroscopeMisalignment     = { 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f };

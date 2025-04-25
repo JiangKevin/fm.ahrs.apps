@@ -1,0 +1,46 @@
+[Fri Apr 25 14:24:08 2025] INFO: Opened log file /home/kevin/Dev/src/fm.ahrs.apps/bin/CrowdNavigation.log
+[Fri Apr 25 14:24:08 2025] INFO: Created 3 worker threads
+[Fri Apr 25 14:24:08 2025] INFO: Added resource path /home/kevin/Dev/src/fm.ahrs.apps/bin/CoreData/
+[Fri Apr 25 14:24:08 2025] INFO: Added resource path /home/kevin/Dev/src/fm.ahrs.apps/bin/Data/
+[Fri Apr 25 14:24:08 2025] INFO: Added resource path /home/kevin/Dev/src/fm.ahrs.apps/bin/UserData/
+[Fri Apr 25 14:24:08 2025] INFO: Added resource path /home/kevin/Dev/src/fm.ahrs.apps/bin/Autoload/LargeData/
+[Fri Apr 25 14:24:09 2025] INFO: Adapter used Broadcom V3D 7.1.10.2
+[Fri Apr 25 14:24:09 2025] INFO: Set screen mode 1920x1080 rate 0 Hz fullscreen monitor 0
+[Fri Apr 25 14:24:09 2025] INFO: Initialized input
+[Fri Apr 25 14:24:09 2025] INFO: Initialized user interface
+[Fri Apr 25 14:24:09 2025] INFO: Initialized renderer
+[Fri Apr 25 14:24:09 2025] INFO: Initialized engine
+Used resources:
+Textures/Ramp.png
+Textures/Spot.png
+Textures/logo_outlined.png
+Textures/UI.png
+Textures/TerrainWeights.dds
+Textures/TerrainDetail1.dds
+Textures/TerrainDetail2.dds
+Textures/TerrainDetail3.dds
+Textures/StoneDiffuse.dds
+Textures/StoneNormal.dds
+Techniques/NoTexture.xml
+Techniques/TerrainBlend.xml
+Techniques/DiffNormal.xml
+Techniques/Diff.xml
+RenderPaths/Forward.xml
+UI/DefaultStyle.xml
+Textures/logo_outlined.png
+Textures/UI.png
+Fonts/Anonymous Pro.ttf
+Models/Plane.mdl
+axes.mdl
+Models/Cylinder.mdl
+Models/Jack.mdl
+Materials/Terrain.xml
+Materials/cz.xml
+Materials/cz.2.xml
+Materials/材质.2_2.xml
+Materials/材质.2_1.xml
+Materials/StoneTiled.xml
+Materials/Jack.xml
+Shaders/GLSL/LitSolid.glsl
+Shaders/GLSL/TerrainBlend.glsl
+Shaders/GLSL/Basic.glsl

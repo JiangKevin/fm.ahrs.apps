@@ -60,13 +60,15 @@ void CrowdNavigation::Start()
     BaseApp::InitMouseMode( MM_ABSOLUTE );
     //
     init_sensor();
+    // 运行时动态关闭日志
+    context_->GetSubsystem< Urho3D::Log >()->SetLevel( Urho3D::LOG_NONE );
 }
 
 void CrowdNavigation::CreateScene()
 {
-    auto* cache = GetSubsystem< ResourceCache >();
-
-    scene_ = new Scene( context_ );
+    auto* cache       = GetSubsystem< ResourceCache >();
+    ahrs_calculation_ = new AhrsCalculation( context_ );
+    scene_            = new Scene( context_ );
 
     // Create octree, use default volume (-1000, -1000, -1000) to (1000, 1000, 1000)
     // Also create a DebugRenderer component so that we can draw debug geometry
@@ -258,6 +260,7 @@ void CrowdNavigation::SubscribeToEvents()
 
     // Subscribe HandleCrowdAgentFormation() function for positioning agent into a formation
     SubscribeToEvent( E_CROWD_AGENT_FORMATION, URHO3D_HANDLER( CrowdNavigation, HandleCrowdAgentFormation ) );
+    //
 }
 
 void CrowdNavigation::SpawnJack( const Vector3& pos, Node* jackGroup )
@@ -760,7 +763,7 @@ void CrowdNavigation::read_sensor_start()
     static struct sensor_device mPara;
     mPara.sensor_imu       = &sensor_imu_;
     mPara.sensor_mmc       = &sensor_mmc_;
-    mPara.ahrs_calculation = &ahrs_calculation_;
+    mPara.ahrs_calculation = ahrs_calculation_;
     mPara.infoText         = infoText_;
     mPara.sensor_data      = &sensor_data_list_[ sensor_data_list_size - 1 ];
     pthread_create( &read_sensor_thread_id, NULL, read_sensor, &( mPara ) );

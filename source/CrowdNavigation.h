@@ -137,6 +137,7 @@ private:
     /// Handle crowd agent formation.
     void HandleCrowdAgentFormation( StringHash eventType, VariantMap& eventData );
     //
+    //
     void setNewPos( float x, float y, float z );
     //
     void init_sensor();
@@ -166,11 +167,10 @@ public:
     uint8_t           deviceAddress_mmc = 0x30;
     uint8_t           deviceAddress_imu = 0x69;
     //
-    MMC56x3         sensor_mmc_;
-    ICM42670        sensor_imu_;
-    AhrsCalculation ahrs_calculation_;
+    MMC56x3          sensor_mmc_;
+    ICM42670         sensor_imu_;
+    AhrsCalculation* ahrs_calculation_;
     //
     std::vector< SENSOR_DB > sensor_data_list_;
-    // 
-    
+    //
 };

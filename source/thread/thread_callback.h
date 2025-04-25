@@ -13,6 +13,7 @@ struct sensor_device
     //
     Text* infoText;
 };
+//
 
 // ----------------------------------------------------------------------
 static void* read_sensor( void* arg )
@@ -74,4 +75,6 @@ static void* read_sensor( void* arg )
     pArg->infoText->SetText( info );
     // Run @ ODR 100Hz
     std::this_thread::sleep_for( std::chrono::milliseconds( 10 ) );
+    //
+    return nullptr;
 }
