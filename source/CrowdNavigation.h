@@ -3,6 +3,7 @@
 #include "MMC56x3/MMC56x3.h"
 #include "TDK40607P/ICM42670P.h"
 #include "base/BaseApp.h"
+#include "concurrentqueue/concurrentqueue.h"
 #include "thread/thread_callback.h"
 //
 namespace Urho3D
@@ -166,11 +167,13 @@ public:
     const std::string i2cDevice         = "/dev/i2c-1";
     uint8_t           deviceAddress_mmc = 0x30;
     uint8_t           deviceAddress_imu = 0x69;
+    float             elapsedTime_;
     //
     MMC56x3          sensor_mmc_;
     ICM42670         sensor_imu_;
     AhrsCalculation* ahrs_calculation_;
     //
-    std::vector< SENSOR_DB > sensor_data_list_;
+    // SENSOR_DB                sensor_data_;
+    moodycamel::ConcurrentQueue< SENSOR_DB > sensor_data_queue_;
     //
 };

@@ -4,6 +4,7 @@
 //
 #include "Fusion/Fusion.h"
 #include "Urho3D/Core/Object.h"
+#include "concurrentqueue/concurrentqueue.h"
 #include <Urho3D/Core/CoreEvents.h>
 #include <cctype>
 #include <iostream>
@@ -30,6 +31,8 @@ struct SENSOR_DB
     float pos_x;
     float pos_y;
     float pos_z;
+    //
+    String info;
 };
 // 验证字符串是否为数字
 static bool isNumber( const std::string& str )

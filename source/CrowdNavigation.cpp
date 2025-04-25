@@ -62,6 +62,8 @@ void CrowdNavigation::Start()
     init_sensor();
     // 运行时动态关闭日志
     context_->GetSubsystem< Urho3D::Log >()->SetLevel( Urho3D::LOG_NONE );
+    // 
+    read_sensor_start();
 }
 
 void CrowdNavigation::CreateScene()
@@ -524,7 +526,7 @@ void CrowdNavigation::MoveCamera( float timeStep )
         }
     }
     //
-    axes_node->SetPosition( Vector3( MainCameraNode_->GetPosition().x_, MainCameraNode_->GetPosition().y_, MainCameraNode_->GetPosition().z_ + 150.0f ) );
+    // axes_node->SetPosition( Vector3( MainCameraNode_->GetPosition().x_, MainCameraNode_->GetPosition().y_, MainCameraNode_->GetPosition().z_ + 150.0f ) );
 }
 
 void CrowdNavigation::ToggleStreaming( bool enabled )
@@ -632,7 +634,15 @@ void CrowdNavigation::HandleUpdate( StringHash eventType, VariantMap& eventData 
         UpdateStreaming();
     }
     //
-    read_sensor_start();
+    elapsedTime_ += timeStep;
+    // 检查是否达到 0.005 秒
+    if ( elapsedTime_ >= 0.005f )
+    {
+        // 触发函数
+        read_sensor_start();
+        // 重置时间
+        elapsedTime_ = 0.0f;
+    }
 }
 
 void CrowdNavigation::HandlePostRenderUpdate( StringHash eventType, VariantMap& eventData )
@@ -755,18 +765,23 @@ void CrowdNavigation::init_sensor()
 //
 void CrowdNavigation::read_sensor_start()
 {
-    SENSOR_DB sdb;
-    sensor_data_list_.push_back( sdb );
-    int sensor_data_list_size = sensor_data_list_.size();
+    // SENSOR_DB sdb;
+    // sensor_data_list_.push_back( sdb );
+    // int sensor_data_list_size = sensor_data_list_.size();
     // 创建一个新线程并启动函数
     pthread_t                   read_sensor_thread_id;
     static struct sensor_device mPara;
     mPara.sensor_imu       = &sensor_imu_;
     mPara.sensor_mmc       = &sensor_mmc_;
     mPara.ahrs_calculation = ahrs_calculation_;
-    mPara.infoText         = infoText_;
-    mPara.sensor_data      = &sensor_data_list_[ sensor_data_list_size - 1 ];
-    pthread_create( &read_sensor_thread_id, NULL, read_sensor, &( mPara ) );
-    // 分离线程，使其在后台独立运行
-    pthread_detach( read_sensor_thread_id );
+    // 创建线程并检查返回值
+    if ( pthread_create( &read_sensor_thread_id, NULL, read_sensor, &mPara ) != 0 )
+    {
+        printf( "pthread_create error.\n" );
+    }
+    // // 分离线程并检查返回值
+    // if ( pthread_detach( read_sensor_thread_id ) != 0 )
+    // {
+    //     printf( "pthread_detach error.\n" );
+    // }
 }

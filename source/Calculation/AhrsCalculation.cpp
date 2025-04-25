@@ -37,20 +37,11 @@ void AhrsCalculation::SolveAnCalculation( SENSOR_DB* sensor_data )
     const FusionEuler  euler = FusionQuaternionToEuler( FusionAhrsGetQuaternion( &ahrs ) );
     const FusionVector earth = FusionAhrsGetEarthAcceleration( &ahrs );
     //
-    std::string out_put = std::to_string( euler.angle.roll );
-    if ( isNumber( out_put ) )
-    {
-        sensor_data->roll  = euler.angle.roll;
-        sensor_data->pitch = euler.angle.pitch;
-        sensor_data->yaw   = euler.angle.yaw;
-        sensor_data->pos_x = earth.axis.x;
-        sensor_data->pos_y = earth.axis.y;
-        sensor_data->pos_z = earth.axis.z;
-    }
-    //
-    // // 步骤2: 发送自定义事件
-    // VariantMap& eventData                        = GetEventDataMap();
-    // eventData[ AhrsCalculationEvent::P_MESSAGE ] = "Hello from custom event!";
-    // SendEvent( E_AHRSCALCULATION_EVENT, eventData );
-    // printf( "Roll %0.1f, Pitch %0.1f, Yaw %0.1f, X %0.1f, Y %0.1f, Z %0.1f\n", euler.angle.roll, euler.angle.pitch, euler.angle.yaw, earth.axis.x, earth.axis.y, earth.axis.z );
+    sensor_data->roll  = euler.angle.roll;
+    sensor_data->pitch = euler.angle.pitch;
+    sensor_data->yaw   = euler.angle.yaw;
+    sensor_data->pos_x = earth.axis.x;
+    sensor_data->pos_y = earth.axis.y;
+    sensor_data->pos_z = earth.axis.z;
+    printf( "Roll %0.1f, Pitch %0.1f, Yaw %0.1f, X %0.1f, Y %0.1f, Z %0.1f\n", euler.angle.roll, euler.angle.pitch, euler.angle.yaw, earth.axis.x, earth.axis.y, earth.axis.z );
 }
