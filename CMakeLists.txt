@@ -19,9 +19,9 @@ include_directories($ENV{FmDev}/libs/libgpiod/include)
 #
 # add_definitions(-DENABLE_LOGGING)
 find_package(OpenGL REQUIRED)
-find_package(unofficial-concurrentqueue CONFIG REQUIRED)
 find_path(RAPIDCSV_INCLUDE_DIRS "rapidcsv.h")
-
+find_package(nlohmann_json CONFIG REQUIRED)
+find_package(unofficial-concurrentqueue CONFIG REQUIRED)
 # 
 # 查找源文件
 file(GLOB app_src
@@ -50,6 +50,7 @@ target_link_libraries(${app_name} PUBLIC
     #
     OpenGL::GL
     unofficial::concurrentqueue::concurrentqueue
+    nlohmann_json::nlohmann_json
     #
     $ENV{FmDev}/libs/urho3d/libs/libAngelScript.a
     $ENV{FmDev}/libs/urho3d/libs/libBox2D.a

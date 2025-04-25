@@ -1,12 +1,12 @@
-[Fri Apr 25 17:57:41 2025] INFO: Opened log file /home/kevin/Dev/src/fm.ahrs.apps/bin/CrowdNavigation.log
-[Fri Apr 25 17:57:41 2025] INFO: Created 3 worker threads
-[Fri Apr 25 17:57:41 2025] INFO: Added resource path /home/kevin/Dev/src/fm.ahrs.apps/bin/CoreData/
-[Fri Apr 25 17:57:41 2025] INFO: Added resource path /home/kevin/Dev/src/fm.ahrs.apps/bin/Data/
-[Fri Apr 25 17:57:41 2025] INFO: Added resource path /home/kevin/Dev/src/fm.ahrs.apps/bin/UserData/
-[Fri Apr 25 17:57:41 2025] INFO: Added resource path /home/kevin/Dev/src/fm.ahrs.apps/bin/Autoload/LargeData/
-[Fri Apr 25 17:57:41 2025] INFO: Adapter used Broadcom V3D 7.1.10.2
-[Fri Apr 25 17:57:41 2025] INFO: Set screen mode 1024x768 rate 0 Hz windowed monitor 0 resizable
-[Fri Apr 25 17:57:41 2025] INFO: Initialized input
-[Fri Apr 25 17:57:41 2025] INFO: Initialized user interface
-[Fri Apr 25 17:57:41 2025] INFO: Initialized renderer
-[Fri Apr 25 17:57:41 2025] INFO: Initialized engine
+[Fri Apr 25 18:55:21 2025] INFO: Opened log file /home/kevin/Dev/src/fm.ahrs.apps/bin/CrowdNavigation.log
+[Fri Apr 25 18:55:21 2025] INFO: Created 3 worker threads
+[Fri Apr 25 18:55:21 2025] INFO: Added resource path /home/kevin/Dev/src/fm.ahrs.apps/bin/CoreData/
+[Fri Apr 25 18:55:21 2025] INFO: Added resource path /home/kevin/Dev/src/fm.ahrs.apps/bin/Data/
+[Fri Apr 25 18:55:21 2025] INFO: Added resource path /home/kevin/Dev/src/fm.ahrs.apps/bin/UserData/
+[Fri Apr 25 18:55:21 2025] INFO: Added resource path /home/kevin/Dev/src/fm.ahrs.apps/bin/Autoload/LargeData/
+[Fri Apr 25 18:55:21 2025] INFO: Adapter used Broadcom V3D 7.1.10.2
+[Fri Apr 25 18:55:21 2025] INFO: Set screen mode 1024x768 rate 0 Hz windowed monitor 0 resizable
+[Fri Apr 25 18:55:21 2025] INFO: Initialized input
+[Fri Apr 25 18:55:21 2025] INFO: Initialized user interface
+[Fri Apr 25 18:55:21 2025] INFO: Initialized renderer
+[Fri Apr 25 18:55:21 2025] INFO: Initialized engine

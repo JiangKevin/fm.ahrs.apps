@@ -5,6 +5,7 @@
 #include "base/BaseApp.h"
 #include "concurrentqueue/concurrentqueue.h"
 #include "thread/thread_callback.h"
+#include <rapidcsv.h>
 //
 namespace Urho3D
 {
@@ -12,7 +13,6 @@ namespace Urho3D
     class Node;
     class Scene;
 }
-
 //
 class CrowdNavigation : public BaseApp
 {
@@ -146,6 +146,8 @@ private:
     void read_sensor_start();
     //
     void read_sensor_end();
+    // 
+    void write_csv( const std::string& filename );
 public:
     /// Flag for using navigation mesh streaming.
     bool useStreaming_{};
@@ -178,4 +180,6 @@ public:
     //
     moodycamel::ConcurrentQueue< SENSOR_DB > sensor_data_queue_;
     //
+    // 创建一个 Document 对象，用于写入 CSV 文件
+    rapidcsv::Document csv_doc_;
 };

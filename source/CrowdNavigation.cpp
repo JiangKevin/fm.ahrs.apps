@@ -65,6 +65,9 @@ void CrowdNavigation::Start()
     // 运行时动态关闭日志
     context_->GetSubsystem< Urho3D::Log >()->SetLevel( Urho3D::LOG_INFO );
     //
+    //
+    // write_csv( "sensor.csv" );
+    //
     read_sensor_start();
 }
 
@@ -771,10 +774,10 @@ void CrowdNavigation::read_sensor_start()
     {
         URHO3D_LOGERROR( "pthread_create error." );
     }
-    // // 分离线程并检查返回值
-    // if ( pthread_detach( read_sensor_thread_id ) != 0 )
+    // //
+    // if ( pthread_join( read_sensor_thread_id, nullptr ) != 0 )
     // {
-    //     printf( "pthread_detach error.\n" );
+    //     URHO3D_LOGERROR( "pthread_join error." );
     // }
 }
 //
@@ -789,5 +792,33 @@ void CrowdNavigation::read_sensor_end()
         // axes_node->SetRotation( Quaternion( sensor_data.quate_w, Vector3( sensor_data.quate_x, sensor_data.quate_y, sensor_data.quate_z ) ) );
         axes_node->SetRotation( Quaternion( sensor_data.roll, sensor_data.pitch, sensor_data.yaw ) );
         axes_node->SetPosition( Vector3( sensor_data.pos_x, sensor_data.pos_y + 10.0f, sensor_data.pos_z ) );
+    }
+}
+//
+void CrowdNavigation::write_csv( const std::string& filename )
+{
+    // 添加表头
+    csv_doc_.SetColumnName( 0, "Name" );
+    csv_doc_.SetColumnName( 1, "Age" );
+    csv_doc_.SetColumnName( 2, "City" );
+
+    // 添加数据行
+    csv_doc_.SetCell< std::string >( 0, 0, "Alice" );
+    csv_doc_.SetCell< int >( 1, 0, 25 );
+    csv_doc_.SetCell< std::string >( 2, 0, "New York" );
+
+    csv_doc_.SetCell< std::string >( 0, 1, "Bob" );
+    csv_doc_.SetCell< int >( 1, 1, 30 );
+    csv_doc_.SetCell< std::string >( 2, 1, "Los Angeles" );
+
+    // 保存到 CSV 文件
+    try
+    {
+        csv_doc_.Save( filename );
+        std::cout << "数据已成功写入 output.csv 文件。" << std::endl;
+    }
+    catch ( const std::exception& e )
+    {
+        std::cerr << "写入文件时出错: " << e.what() << std::endl;
     }
 }
