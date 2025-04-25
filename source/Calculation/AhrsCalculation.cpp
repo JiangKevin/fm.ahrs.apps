@@ -1,6 +1,7 @@
 #include "AhrsCalculation.h"
 #include <cstdio>
 #include <time.h>
+#include <Urho3D/IO/Log.h>
 //
 // 带 Context* 参数的构造函数实现
 AhrsCalculation::AhrsCalculation( Urho3D::Context* context ) : Urho3D::Object( context )
@@ -43,5 +44,5 @@ void AhrsCalculation::SolveAnCalculation( SENSOR_DB* sensor_data )
     sensor_data->pos_x = earth.axis.x;
     sensor_data->pos_y = earth.axis.y;
     sensor_data->pos_z = earth.axis.z;
-    printf( "Roll %0.1f, Pitch %0.1f, Yaw %0.1f, X %0.1f, Y %0.1f, Z %0.1f\n", euler.angle.roll, euler.angle.pitch, euler.angle.yaw, earth.axis.x, earth.axis.y, earth.axis.z );
+    // 
 }

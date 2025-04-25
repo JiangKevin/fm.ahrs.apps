@@ -63,7 +63,7 @@ void CrowdNavigation::Start()
     //
     init_sensor();
     // 运行时动态关闭日志
-    // context_->GetSubsystem< Urho3D::Log >()->SetLevel( Urho3D::LOG_NONE );
+    context_->GetSubsystem< Urho3D::Log >()->SetLevel( Urho3D::LOG_INFO );
     //
     read_sensor_start();
 }
@@ -740,14 +740,14 @@ void CrowdNavigation::init_sensor()
     // Initializing the MMC56x3
     if ( ! sensor_mmc_.begin( deviceAddress_mmc, i2cDevice.c_str() ) )
     {
-        std::cerr << "Failed to initialize MMC56x3 sensor" << std::endl;
+        URHO3D_LOGERROR( "Failed to initialize MMC56x3 sensor" );
     }
     // Initializing the ICM42670
     int ret;
     ret = sensor_imu_.begin( false, deviceAddress_imu, i2cDevice.c_str() );
     if ( ret != 0 )
     {
-        std::cerr << "ICM42670 initialization failed: " << std::endl;
+        URHO3D_LOGERROR( "Failed to initialize ICM42670 sensor" );
     }
     // Accel ODR = 100 Hz and Full Scale Range = 16G
     sensor_imu_.startAccel( 100, 16 );
@@ -769,7 +769,7 @@ void CrowdNavigation::read_sensor_start()
     // 创建线程并检查返回值
     if ( pthread_create( &read_sensor_thread_id, NULL, read_sensor, &mPara ) != 0 )
     {
-        printf( "pthread_create error.\n" );
+        URHO3D_LOGERROR( "pthread_create error." );
     }
     // // 分离线程并检查返回值
     // if ( pthread_detach( read_sensor_thread_id ) != 0 )
@@ -785,16 +785,14 @@ void CrowdNavigation::read_sensor_end()
     if ( found )
     {
         infoText_->SetText( sensor_data.info.c_str() );
-        //
-
         // 将角度值转换为弧度值
         float rollRadian  = sensor_data.roll * ( PI / 180.0f );
         float pitchRadian = sensor_data.pitch * ( PI / 180.0f );
         float yawRadian   = sensor_data.yaw * ( PI / 180.0f );
         // 创建四元数来表示旋转
         Quaternion rotation = Quaternion( rollRadian, Vector3::RIGHT ) * Quaternion( pitchRadian, Vector3::UP ) * Quaternion( yawRadian, Vector3::FORWARD );
-        // 
         // 设置节点的旋转
+        // printf( "roll: %f, pitch: %f, yaw: %f\n", rotation.x_, rotation.y_, rotation.z_ );
         axes_node->SetRotation(rotation);
     }
 }
