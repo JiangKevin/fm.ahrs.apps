@@ -60,8 +60,7 @@ static void* read_sensor( void* arg )
     pArg->sensor_data->gyro_z = imu_event.gyro[ 2 ] / 16.4;
     info += "Accelerometer: x = " + String( pArg->sensor_data->acc_x ) + " g, y = " + String( pArg->sensor_data->acc_y ) + " g, z = " + String( pArg->sensor_data->acc_z ) + " g\n";
     info += "Gyroscope: x = " + String( pArg->sensor_data->gyro_x ) + " dps, y = " + String( pArg->sensor_data->gyro_y ) + " dps, z = " + String( pArg->sensor_data->gyro_z ) + " dps\n";
-    //
-    pArg->infoText->SetText( info );
+
     //
     pArg->ahrs_calculation->SolveAnCalculation( pArg->sensor_data );
     //
@@ -71,6 +70,8 @@ static void* read_sensor( void* arg )
     info += "Pos X: " + String( pArg->sensor_data->pos_x ) + "\n";
     info += "Pos Y: " + String( pArg->sensor_data->pos_y ) + "\n";
     info += "Pos Z: " + String( pArg->sensor_data->pos_z ) + "\n";
+    //
+    pArg->infoText->SetText( info );
     // Run @ ODR 100Hz
     std::this_thread::sleep_for( std::chrono::milliseconds( 10 ) );
 }

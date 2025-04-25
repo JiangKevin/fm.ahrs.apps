@@ -3,6 +3,9 @@
 #pragma once
 //
 #include "Fusion/Fusion.h"
+#include <iostream>
+#include <string>
+#include <cctype>
 //
 #define SAMPLE_RATE ( 100 )  // replace this with actual sample rate
 //
@@ -26,6 +29,18 @@ struct SENSOR_DB
     float pos_y;
     float pos_z;
 };
+// 验证字符串是否为数字
+static bool isNumber( const std::string& str )
+{
+    for ( char c : str )
+    {
+        if ( ! std::isdigit( c ) )
+        {
+            return false;
+        }
+    }
+    return true;
+}
 //
 class AhrsCalculation
 {
