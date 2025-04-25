@@ -13,6 +13,7 @@
 #include <Urho3D/Graphics/Terrain.h>
 #include <Urho3D/Graphics/Zone.h>
 #include <Urho3D/Input/Input.h>
+#include <Urho3D/Math/Quaternion.h>
 #include <Urho3D/Navigation/CrowdAgent.h>
 #include <Urho3D/Navigation/DynamicNavigationMesh.h>
 #include <Urho3D/Navigation/Navigable.h>
@@ -25,6 +26,7 @@
 #include <Urho3D/Scene/Scene.h>
 #include <Urho3D/UI/Font.h>
 #include <Urho3D/UI/Text.h>
+#include <Urho3D/Math/Vector3.h>
 #include <Urho3D/UI/UI.h>
 #include <iostream>
 //
@@ -61,8 +63,8 @@ void CrowdNavigation::Start()
     //
     init_sensor();
     // 运行时动态关闭日志
-    context_->GetSubsystem< Urho3D::Log >()->SetLevel( Urho3D::LOG_NONE );
-    // 
+    // context_->GetSubsystem< Urho3D::Log >()->SetLevel( Urho3D::LOG_NONE );
+    //
     read_sensor_start();
 }
 
@@ -634,15 +636,7 @@ void CrowdNavigation::HandleUpdate( StringHash eventType, VariantMap& eventData 
         UpdateStreaming();
     }
     //
-    elapsedTime_ += timeStep;
-    // 检查是否达到 0.005 秒
-    if ( elapsedTime_ >= 0.005f )
-    {
-        // 触发函数
-        read_sensor_start();
-        // 重置时间
-        elapsedTime_ = 0.0f;
-    }
+    read_sensor_end();
 }
 
 void CrowdNavigation::HandlePostRenderUpdate( StringHash eventType, VariantMap& eventData )
@@ -765,15 +759,13 @@ void CrowdNavigation::init_sensor()
 //
 void CrowdNavigation::read_sensor_start()
 {
-    // SENSOR_DB sdb;
-    // sensor_data_list_.push_back( sdb );
-    // int sensor_data_list_size = sensor_data_list_.size();
     // 创建一个新线程并启动函数
     pthread_t                   read_sensor_thread_id;
     static struct sensor_device mPara;
-    mPara.sensor_imu       = &sensor_imu_;
-    mPara.sensor_mmc       = &sensor_mmc_;
-    mPara.ahrs_calculation = ahrs_calculation_;
+    mPara.sensor_imu        = &sensor_imu_;
+    mPara.sensor_mmc        = &sensor_mmc_;
+    mPara.ahrs_calculation  = ahrs_calculation_;
+    mPara.sensor_data_queue = &sensor_data_queue_;
     // 创建线程并检查返回值
     if ( pthread_create( &read_sensor_thread_id, NULL, read_sensor, &mPara ) != 0 )
     {
@@ -784,4 +776,25 @@ void CrowdNavigation::read_sensor_start()
     // {
     //     printf( "pthread_detach error.\n" );
     // }
+}
+//
+void CrowdNavigation::read_sensor_end()
+{
+    SENSOR_DB sensor_data;
+    bool      found = sensor_data_queue_.try_dequeue( sensor_data );
+    if ( found )
+    {
+        infoText_->SetText( sensor_data.info.c_str() );
+        //
+
+        // 将角度值转换为弧度值
+        float rollRadian  = sensor_data.roll * ( PI / 180.0f );
+        float pitchRadian = sensor_data.pitch * ( PI / 180.0f );
+        float yawRadian   = sensor_data.yaw * ( PI / 180.0f );
+        // 创建四元数来表示旋转
+        Quaternion rotation = Quaternion( rollRadian, Vector3::RIGHT ) * Quaternion( pitchRadian, Vector3::UP ) * Quaternion( yawRadian, Vector3::FORWARD );
+        // 
+        // 设置节点的旋转
+        axes_node->SetRotation(rotation);
+    }
 }

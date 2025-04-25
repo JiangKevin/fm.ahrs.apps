@@ -32,7 +32,7 @@ struct SENSOR_DB
     float pos_y;
     float pos_z;
     //
-    String info;
+    std::string info;
 };
 // 验证字符串是否为数字
 static bool isNumber( const std::string& str )

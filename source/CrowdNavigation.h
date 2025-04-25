@@ -144,6 +144,8 @@ private:
     void init_sensor();
     //
     void read_sensor_start();
+    //
+    void read_sensor_end();
 public:
     /// Flag for using navigation mesh streaming.
     bool useStreaming_{};
@@ -163,6 +165,7 @@ public:
     Drawable* hitDrawable;
     Node*     axes_node;
 public:
+    const float       PI = 3.14159265;
     bool              mul_views_{ false };
     const std::string i2cDevice         = "/dev/i2c-1";
     uint8_t           deviceAddress_mmc = 0x30;
@@ -173,7 +176,6 @@ public:
     ICM42670         sensor_imu_;
     AhrsCalculation* ahrs_calculation_;
     //
-    // SENSOR_DB                sensor_data_;
     moodycamel::ConcurrentQueue< SENSOR_DB > sensor_data_queue_;
     //
 };

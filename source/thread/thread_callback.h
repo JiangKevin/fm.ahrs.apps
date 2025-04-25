@@ -23,11 +23,11 @@ static void* read_sensor( void* arg )
     //
     while ( true )
     {
-        String    info = "Info:\n";
-        SENSOR_DB sensor_data;
+        std::string info = "Info:\n";
+        SENSOR_DB   sensor_data;
         //
         sensor_data.time = clock();
-        info += "Time: " + String( sensor_data.time ) + "\n";
+        info += "Time: " + std::to_string( sensor_data.time ) + "\n";
         // MMC56x3
         float x, y, z;
         if ( pArg->sensor_mmc->getEvent( x, y, z ) )
@@ -36,7 +36,7 @@ static void* read_sensor( void* arg )
             sensor_data.mag_y = y;
             sensor_data.mag_z = z;
             //
-            info += "Magnetic field: x = " + String( x ) + " uT, y = " + String( y ) + " uT, z = " + String( z ) + " uT\n";
+            info += "Magnetic field: x = " + std::to_string( x ) + " uT, y = " + std::to_string( y ) + " uT, z = " + std::to_string( z ) + " uT\n";
             //
             // std::cout << "Magnetic field: x = " << x << " uT, y = " << y << " uT, z = " << z << " uT, all = " << std::sqrt( std::pow( x, 2 ) + std::pow( y, 2 ) + std::pow( z, 2 ) ) << " uT" << std::endl;
         }
@@ -44,7 +44,7 @@ static void* read_sensor( void* arg )
         float temp = pArg->sensor_mmc->readTemperature();
         if ( ! std::isnan( temp ) )
         {
-            info += "Magnetic Temperature: " + String( temp ) + " C\n";
+            info += "Magnetic Temperature: " + std::to_string( temp ) + " C\n";
             // std::cout << "Temperature: " << temp << " C" << std::endl;
         }
         else
@@ -63,14 +63,14 @@ static void* read_sensor( void* arg )
         sensor_data.gyro_x = imu_event.gyro[ 0 ] / 16.4;
         sensor_data.gyro_y = imu_event.gyro[ 1 ] / 16.4;
         sensor_data.gyro_z = imu_event.gyro[ 2 ] / 16.4;
-        info += "Accelerometer: x = " + String( sensor_data.acc_x ) + " g, y = " + String( sensor_data.acc_y ) + " g, z = " + String( sensor_data.acc_z ) + " g\n";
-        info += "Gyroscope: x = " + String( sensor_data.gyro_x ) + " dps, y = " + String( sensor_data.gyro_y ) + " dps, z = " + String( sensor_data.gyro_z ) + " dps\n";
+        info += "Accelerometer: x = " + std::to_string( sensor_data.acc_x ) + " g, y = " + std::to_string( sensor_data.acc_y ) + " g, z = " + std::to_string( sensor_data.acc_z ) + " g\n";
+        info += "Gyroscope: x = " + std::to_string( sensor_data.gyro_x ) + " dps, y = " + std::to_string( sensor_data.gyro_y ) + " dps, z = " + std::to_string( sensor_data.gyro_z ) + " dps\n";
 
         //
         pArg->ahrs_calculation->SolveAnCalculation( &sensor_data );
         //
-        info += "Roll: " + String( sensor_data.roll ) + " Pitch: " + String( sensor_data.pitch ) + " Yaw: " + String( sensor_data.yaw ) + "\n";
-        info += "Pos X: " + String( sensor_data.pos_x ) + " Pos Y: " + String( sensor_data.pos_y ) + " Pos Z: " + String( sensor_data.pos_z ) + "\n";
+        info += "Roll: " + std::to_string( sensor_data.roll ) + " Pitch: " + std::to_string( sensor_data.pitch ) + " Yaw: " + std::to_string( sensor_data.yaw ) + "\n";
+        info += "Pos X: " + std::to_string( sensor_data.pos_x ) + " Pos Y: " + std::to_string( sensor_data.pos_y ) + " Pos Z: " + std::to_string( sensor_data.pos_z ) + "\n";
         //
         sensor_data.info = info;
         // 生成数据
