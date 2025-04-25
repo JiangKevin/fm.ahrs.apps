@@ -69,13 +69,14 @@ static void* read_sensor( void* arg )
         //
         pArg->ahrs_calculation->SolveAnCalculation( &sensor_data );
         //
+        info += "Quaternion: " + std::to_string( sensor_data.quate_x ) + " " + std::to_string( sensor_data.quate_y ) + " " + std::to_string( sensor_data.quate_z ) + " " + std::to_string( sensor_data.quate_w ) + "\n";
         info += "Roll: " + std::to_string( sensor_data.roll ) + " Pitch: " + std::to_string( sensor_data.pitch ) + " Yaw: " + std::to_string( sensor_data.yaw ) + "\n";
         info += "Pos X: " + std::to_string( sensor_data.pos_x ) + " Pos Y: " + std::to_string( sensor_data.pos_y ) + " Pos Z: " + std::to_string( sensor_data.pos_z ) + "\n";
         //
         sensor_data.info = info;
         // 生成数据
         pArg->sensor_data_queue->enqueue( sensor_data );
-        // 
+        //
         URHO3D_LOGINFO( info.c_str() );
         // Run @ ODR 100Hz
         std::this_thread::sleep_for( std::chrono::milliseconds( 10 ) );

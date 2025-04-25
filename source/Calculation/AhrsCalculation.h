@@ -25,6 +25,10 @@ struct SENSOR_DB
     float mag_x;
     float mag_y;
     float mag_z;
+    float quate_x;
+    float quate_y;
+    float quate_z;
+    float quate_w;
     float roll;
     float pitch;
     float yaw;

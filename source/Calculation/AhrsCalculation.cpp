@@ -1,7 +1,7 @@
 #include "AhrsCalculation.h"
+#include <Urho3D/IO/Log.h>
 #include <cstdio>
 #include <time.h>
-#include <Urho3D/IO/Log.h>
 //
 // 带 Context* 参数的构造函数实现
 AhrsCalculation::AhrsCalculation( Urho3D::Context* context ) : Urho3D::Object( context )
@@ -35,14 +35,22 @@ void AhrsCalculation::SolveAnCalculation( SENSOR_DB* sensor_data )
     FusionAhrsUpdate( &ahrs, gyroscope, accelerometer, magnetometer, deltaTime );
 
     // Print algorithm outputs
+    auto               quate = FusionAhrsGetQuaternion( &ahrs );
     const FusionEuler  euler = FusionQuaternionToEuler( FusionAhrsGetQuaternion( &ahrs ) );
     const FusionVector earth = FusionAhrsGetEarthAcceleration( &ahrs );
+    //
+    sensor_data->quate_x = quate.element.x;
+    sensor_data->quate_y = quate.element.y;
+    sensor_data->quate_z = quate.element.z;
+    sensor_data->quate_w = quate.element.w;
     //
     sensor_data->roll  = euler.angle.roll;
     sensor_data->pitch = euler.angle.pitch;
     sensor_data->yaw   = euler.angle.yaw;
+    //
     sensor_data->pos_x = earth.axis.x;
     sensor_data->pos_y = earth.axis.y;
     sensor_data->pos_z = earth.axis.z;
-    // 
+
+    //
 }

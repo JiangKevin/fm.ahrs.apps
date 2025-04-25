@@ -14,6 +14,7 @@
 #include <Urho3D/Graphics/Zone.h>
 #include <Urho3D/Input/Input.h>
 #include <Urho3D/Math/Quaternion.h>
+#include <Urho3D/Math/Vector3.h>
 #include <Urho3D/Navigation/CrowdAgent.h>
 #include <Urho3D/Navigation/DynamicNavigationMesh.h>
 #include <Urho3D/Navigation/Navigable.h>
@@ -26,7 +27,6 @@
 #include <Urho3D/Scene/Scene.h>
 #include <Urho3D/UI/Font.h>
 #include <Urho3D/UI/Text.h>
-#include <Urho3D/Math/Vector3.h>
 #include <Urho3D/UI/UI.h>
 #include <iostream>
 //
@@ -785,14 +785,9 @@ void CrowdNavigation::read_sensor_end()
     if ( found )
     {
         infoText_->SetText( sensor_data.info.c_str() );
-        // 将角度值转换为弧度值
-        float rollRadian  = sensor_data.roll * ( PI / 180.0f );
-        float pitchRadian = sensor_data.pitch * ( PI / 180.0f );
-        float yawRadian   = sensor_data.yaw * ( PI / 180.0f );
-        // 创建四元数来表示旋转
-        Quaternion rotation = Quaternion( rollRadian, Vector3::RIGHT ) * Quaternion( pitchRadian, Vector3::UP ) * Quaternion( yawRadian, Vector3::FORWARD );
-        // 设置节点的旋转
-        // printf( "roll: %f, pitch: %f, yaw: %f\n", rotation.x_, rotation.y_, rotation.z_ );
-        axes_node->SetRotation(rotation);
+        // 从欧拉角创建四元数
+        // axes_node->SetRotation( Quaternion( sensor_data.quate_w, Vector3( sensor_data.quate_x, sensor_data.quate_y, sensor_data.quate_z ) ) );
+        axes_node->SetRotation( Quaternion( sensor_data.roll, sensor_data.pitch, sensor_data.yaw ) );
+        axes_node->SetPosition( Vector3( sensor_data.pos_x, sensor_data.pos_y + 10.0f, sensor_data.pos_z ) );
     }
 }
