@@ -137,6 +137,7 @@ private:
     void HandleCrowdAgentReposition( StringHash eventType, VariantMap& eventData );
     /// Handle crowd agent formation.
     void HandleCrowdAgentFormation( StringHash eventType, VariantMap& eventData );
+    void HandleQuit( StringHash eventType, VariantMap& eventData );
     //
     //
     void setNewPos( float x, float y, float z );
@@ -146,8 +147,12 @@ private:
     void read_sensor_start();
     //
     void read_sensor_end();
-    // 
-    void write_csv( const std::string& filename );
+    //
+    void init_out_csv( const std::string& filename );
+    //
+    void update_out_csv( const SENSOR_DB& sensor_data );
+    //
+    void close_out_csv();
 public:
     /// Flag for using navigation mesh streaming.
     bool useStreaming_{};
@@ -182,4 +187,6 @@ public:
     //
     // 创建一个 Document 对象，用于写入 CSV 文件
     rapidcsv::Document csv_doc_;
+    std::string        csv_filename_;
+    int                csv_index_{ 0 };
 };

@@ -1,3 +1,4 @@
 build
 bin/ahrs
 bin/CrowdNavigation.log
+bin/out_sensor.csv

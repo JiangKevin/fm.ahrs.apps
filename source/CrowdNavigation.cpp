@@ -65,8 +65,7 @@ void CrowdNavigation::Start()
     // 运行时动态关闭日志
     context_->GetSubsystem< Urho3D::Log >()->SetLevel( Urho3D::LOG_INFO );
     //
-    //
-    // write_csv( "sensor.csv" );
+    init_out_csv( "out_sensor.csv" );
     //
     read_sensor_start();
 }
@@ -267,7 +266,8 @@ void CrowdNavigation::SubscribeToEvents()
 
     // Subscribe HandleCrowdAgentFormation() function for positioning agent into a formation
     SubscribeToEvent( E_CROWD_AGENT_FORMATION, URHO3D_HANDLER( CrowdNavigation, HandleCrowdAgentFormation ) );
-    //
+    // 订阅退出事件
+    SubscribeToEvent( E_EXITREQUESTED, URHO3D_HANDLER( CrowdNavigation, HandleQuit ) );
 }
 
 void CrowdNavigation::SpawnJack( const Vector3& pos, Node* jackGroup )
@@ -792,33 +792,62 @@ void CrowdNavigation::read_sensor_end()
         // axes_node->SetRotation( Quaternion( sensor_data.quate_w, Vector3( sensor_data.quate_x, sensor_data.quate_y, sensor_data.quate_z ) ) );
         axes_node->SetRotation( Quaternion( sensor_data.roll, sensor_data.pitch, sensor_data.yaw ) );
         axes_node->SetPosition( Vector3( sensor_data.pos_x, sensor_data.pos_y + 10.0f, sensor_data.pos_z ) );
+        //
+        update_out_csv( sensor_data );
     }
 }
 //
-void CrowdNavigation::write_csv( const std::string& filename )
+void CrowdNavigation::init_out_csv( const std::string& filename )
 {
-    // 添加表头
-    csv_doc_.SetColumnName( 0, "Name" );
-    csv_doc_.SetColumnName( 1, "Age" );
-    csv_doc_.SetColumnName( 2, "City" );
+    csv_filename_ = filename;
+    //
+    csv_doc_.SetColumnName( 0, "Time (s)" );
+    //
+    csv_doc_.SetColumnName( 1, "Gyroscope X (deg/s)" );
+    csv_doc_.SetColumnName( 2, "Gyroscope Y (deg/s)" );
+    csv_doc_.SetColumnName( 3, "Gyroscope Z (deg/s)" );
+    //
+    csv_doc_.SetColumnName( 4, "Accelerometer X (g)" );
+    csv_doc_.SetColumnName( 5, "Accelerometer Y (g)" );
+    csv_doc_.SetColumnName( 6, "Accelerometer Z (g)" );
+    //
+    csv_doc_.SetColumnName( 7, "Magnetometer X (uT)" );
+    csv_doc_.SetColumnName( 8, "Magnetometer Y (uT)" );
+    csv_doc_.SetColumnName( 9, "Magnetometer Z (uT)" );
+    //
+}
 
+void CrowdNavigation::update_out_csv( const SENSOR_DB& sensor_data )
+{
     // 添加数据行
-    csv_doc_.SetCell< std::string >( 0, 0, "Alice" );
-    csv_doc_.SetCell< int >( 1, 0, 25 );
-    csv_doc_.SetCell< std::string >( 2, 0, "New York" );
+    csv_doc_.SetCell< float >( 0, csv_index_, sensor_data.time );
+    csv_doc_.SetCell< float >( 1, csv_index_, sensor_data.gyro_x );
+    csv_doc_.SetCell< float >( 2, csv_index_, sensor_data.gyro_y );
+    csv_doc_.SetCell< float >( 3, csv_index_, sensor_data.gyro_z );
+    csv_doc_.SetCell< float >( 4, csv_index_, sensor_data.acc_x );
+    csv_doc_.SetCell< float >( 5, csv_index_, sensor_data.acc_y );
+    csv_doc_.SetCell< float >( 6, csv_index_, sensor_data.acc_z );
+    csv_doc_.SetCell< float >( 7, csv_index_, sensor_data.mag_x );
+    csv_doc_.SetCell< float >( 8, csv_index_, sensor_data.mag_y );
+    csv_doc_.SetCell< float >( 9, csv_index_, sensor_data.mag_z );
 
-    csv_doc_.SetCell< std::string >( 0, 1, "Bob" );
-    csv_doc_.SetCell< int >( 1, 1, 30 );
-    csv_doc_.SetCell< std::string >( 2, 1, "Los Angeles" );
+    //
+    csv_index_++;
+}
 
-    // 保存到 CSV 文件
+void CrowdNavigation::close_out_csv()
+{
     try
     {
-        csv_doc_.Save( filename );
+        csv_doc_.Save( csv_filename_ );
         std::cout << "数据已成功写入 output.csv 文件。" << std::endl;
     }
     catch ( const std::exception& e )
     {
         std::cerr << "写入文件时出错: " << e.what() << std::endl;
     }
+}
+void CrowdNavigation::HandleQuit( StringHash eventType, VariantMap& eventData )
+{
+    close_out_csv();
 }

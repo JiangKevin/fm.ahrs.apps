@@ -210,6 +210,9 @@ void BaseApp::HandleKeyUp( StringHash /*eventType*/, VariantMap& eventData )
     // Close console (if open) or exit when ESC is pressed
     if ( key == KEY_ESCAPE )
     {
+
+        // If the console is open, close it
+        // If the console is not open, exit the application
         Console* console = GetSubsystem< Console >();
         if ( console->IsVisible() )
         {
@@ -227,6 +230,9 @@ void BaseApp::HandleKeyUp( StringHash /*eventType*/, VariantMap& eventData )
             }
             else
             {
+                VariantMap& eventData = GetEventDataMap();
+                SendEvent( E_EXITREQUESTED, eventData );
+                //
                 engine_->Exit();
             }
         }
