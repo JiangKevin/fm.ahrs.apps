@@ -827,7 +827,7 @@ void CrowdNavigation::read_sensor_end()
             auto axes_node = scene_->CreateChild( "Axes_test" );
             axes_node->SetScale( Vector3( 0.05f, 0.05f, 0.05f ) );
             axes_node->SetRotation( Quaternion( sensor_data.roll, sensor_data.pitch, sensor_data.yaw ) );
-            axes_node->SetPosition( Vector3( sensor_data.pos_x, sensor_data.pos_y + 10.0f, sensor_data.pos_z ) );
+            axes_node->SetPosition( Vector3( sensor_data.pos_x , sensor_data.pos_y + 10.0f, sensor_data.pos_z  ) );
             auto* axes_obj = axes_node->CreateComponent< StaticModel >();
             axes_obj->SetModel( cache->GetResource< Model >( "axes.mdl" ) );
             axes_obj->ApplyMaterialList();
@@ -855,6 +855,13 @@ void CrowdNavigation::init_out_csv( const std::string& filename )
     csv_doc_.SetColumnName( 8, "Magnetometer Y (uT)" );
     csv_doc_.SetColumnName( 9, "Magnetometer Z (uT)" );
     //
+    csv_doc_.SetColumnName( 10, "Angle X (d)" );
+    csv_doc_.SetColumnName( 11, "Angle Y (d)" );
+    csv_doc_.SetColumnName( 12, "Angle Z (d)" );
+    //
+    csv_doc_.SetColumnName( 13, "Position X" );
+    csv_doc_.SetColumnName( 14, "Position Y" );
+    csv_doc_.SetColumnName( 15, "Position Z" );
 }
 
 void CrowdNavigation::update_out_csv( const SENSOR_DB& sensor_data )
@@ -870,6 +877,14 @@ void CrowdNavigation::update_out_csv( const SENSOR_DB& sensor_data )
     csv_doc_.SetCell< float >( 7, csv_index_, sensor_data.mag_x );
     csv_doc_.SetCell< float >( 8, csv_index_, sensor_data.mag_y );
     csv_doc_.SetCell< float >( 9, csv_index_, sensor_data.mag_z );
+    //
+
+    csv_doc_.SetCell< float >( 10, csv_index_, sensor_data.roll );
+    csv_doc_.SetCell< float >( 11, csv_index_, sensor_data.pitch );
+    csv_doc_.SetCell< float >( 12, csv_index_, sensor_data.yaw );
+    csv_doc_.SetCell< float >( 13, csv_index_, sensor_data.pos_x );
+    csv_doc_.SetCell< float >( 14, csv_index_, sensor_data.pos_y );
+    csv_doc_.SetCell< float >( 15, csv_index_, sensor_data.pos_z );
 
     //
     csv_index_++;
@@ -912,6 +927,14 @@ void CrowdNavigation::read_in_csv( const std::string& filename )
     std::vector< float > magn_y = csv_doc_.GetColumn< float >( "Magnetometer Y (uT)" );
     std::vector< float > magn_z = csv_doc_.GetColumn< float >( "Magnetometer Z (uT)" );
     //
+    std::vector< float > roll  = csv_doc_.GetColumn< float >( "Angle X (d)" );
+    std::vector< float > pitch = csv_doc_.GetColumn< float >( "Angle Y (d)" );
+    std::vector< float > yaw   = csv_doc_.GetColumn< float >( "Angle Z (d)" );
+
+    std::vector< float > pos_x = csv_doc_.GetColumn< float >( "Position X" );
+    std::vector< float > pos_y = csv_doc_.GetColumn< float >( "Position Y" );
+    std::vector< float > pos_z = csv_doc_.GetColumn< float >( "Position Z" );
+    //
     int count = time.size();
     for ( int i = 0; i < count; i++ )
     {
@@ -926,7 +949,14 @@ void CrowdNavigation::read_in_csv( const std::string& filename )
         sensor_data.acc_z  = acc_z[ i ];
         sensor_data.mag_x  = magn_x[ i ];
         sensor_data.mag_y  = magn_y[ i ];
-        sensor_data.mag_z  = magn_z[ i ];
+        sensor_data.mag_z  = magn_z[ i ];   
+        sensor_data.roll   = roll[ i ];
+        sensor_data.pitch  = pitch[ i ];
+        sensor_data.yaw    = yaw[ i ];
+        sensor_data.pos_x  = pos_x[ i ];
+        sensor_data.pos_y  = pos_y[ i ];
+        sensor_data.pos_z  = pos_z[ i ];
+
         //
         sensor_data_queue_.enqueue( sensor_data );
     }
