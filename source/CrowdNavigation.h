@@ -153,6 +153,8 @@ private:
     void update_out_csv( const SENSOR_DB& sensor_data );
     //
     void close_out_csv();
+    //
+    void read_in_csv( const std::string& filename );
 public:
     /// Flag for using navigation mesh streaming.
     bool useStreaming_{};
@@ -170,9 +172,8 @@ public:
     //
     Vector3   hitPos;
     Drawable* hitDrawable;
-    Node*     axes_node;
+    Node*     axes_node_;
 public:
-    const float       PI = 3.14159265;
     bool              mul_views_{ false };
     const std::string i2cDevice         = "/dev/i2c-1";
     uint8_t           deviceAddress_mmc = 0x30;
@@ -189,4 +190,6 @@ public:
     rapidcsv::Document csv_doc_;
     std::string        csv_filename_;
     int                csv_index_{ 0 };
+public:
+    int app_mode_{ 1 };  // 0: Measurement mode, 1:Simulation Mode
 };

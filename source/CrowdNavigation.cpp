@@ -64,10 +64,19 @@ void CrowdNavigation::Start()
     init_sensor();
     // 运行时动态关闭日志
     context_->GetSubsystem< Urho3D::Log >()->SetLevel( Urho3D::LOG_INFO );
-    //
-    init_out_csv( "out_sensor.csv" );
-    //
-    read_sensor_start();
+
+    // 实测模式
+    if ( app_mode_ == 0 )
+    {
+        //
+        init_out_csv( "out_sensor.csv" );
+        read_sensor_start();
+    }
+    else
+    {
+        //模拟模式
+        read_in_csv( "out_sensor.csv" );
+    }
 }
 
 void CrowdNavigation::CreateScene()
@@ -110,14 +119,14 @@ void CrowdNavigation::CreateScene()
     // Create randomly sized boxes. If boxes are big enough, make them occluders
     Node* boxGroup = scene_->CreateChild( "Boxes" );
     //
-    axes_node = scene_->CreateChild( "Axes" );
-    axes_node->SetPosition( Vector3( 0.0f, 10.0f, 0.0f ) );
-    axes_node->SetScale( Vector3( 0.1f, 0.1f, 0.1f ) );
-    auto* axes_obj = axes_node->CreateComponent< StaticModel >();
-    axes_obj->SetModel( cache->GetResource< Model >( "axes.mdl" ) );
-    axes_obj->ApplyMaterialList();
+    axes_node_ = scene_->CreateChild( "Axes" );
+    axes_node_->SetPosition( Vector3( 0.0f, 10.0f, 0.0f ) );
+    axes_node_->SetScale( Vector3( 0.1f, 0.1f, 0.1f ) );
+    auto* axes_obj_ = axes_node_->CreateComponent< StaticModel >();
+    axes_obj_->SetModel( cache->GetResource< Model >( "axes.mdl" ) );
+    axes_obj_->ApplyMaterialList();
     // axes_obj->SetMaterial( cache->GetResource< Material >( "axes.xml" ) );
-    axes_obj->SetCastShadows( true );
+    axes_obj_->SetCastShadows( true );
     //
 
     // Create a DynamicNavigationMesh component to the scene root
@@ -787,13 +796,30 @@ void CrowdNavigation::read_sensor_end()
     bool      found = sensor_data_queue_.try_dequeue( sensor_data );
     if ( found )
     {
-        infoText_->SetText( sensor_data.info.c_str() );
-        // 从欧拉角创建四元数
-        // axes_node->SetRotation( Quaternion( sensor_data.quate_w, Vector3( sensor_data.quate_x, sensor_data.quate_y, sensor_data.quate_z ) ) );
-        axes_node->SetRotation( Quaternion( sensor_data.roll, sensor_data.pitch, sensor_data.yaw ) );
-        axes_node->SetPosition( Vector3( sensor_data.pos_x, sensor_data.pos_y + 10.0f, sensor_data.pos_z ) );
-        //
-        update_out_csv( sensor_data );
+        if ( app_mode_ == 0 )
+        {
+            infoText_->SetText( sensor_data.info.c_str() );
+            // 从欧拉角创建四元数
+            // axes_node->SetRotation( Quaternion( sensor_data.quate_w, Vector3( sensor_data.quate_x, sensor_data.quate_y, sensor_data.quate_z ) ) );
+            axes_node_->SetRotation( Quaternion( sensor_data.roll, sensor_data.pitch, sensor_data.yaw ) );
+            axes_node_->SetPosition( Vector3( sensor_data.pos_x, sensor_data.pos_y + 10.0f, sensor_data.pos_z ) );
+            //
+            update_out_csv( sensor_data );
+        }
+        else
+        {
+            auto* cache = GetSubsystem< ResourceCache >();
+            infoText_->SetText( sensor_data.info.c_str() );
+            //
+            auto axes_node = scene_->CreateChild( "Axes" );
+            axes_node_->SetRotation( Quaternion( sensor_data.roll, sensor_data.pitch, sensor_data.yaw ) );
+            axes_node_->SetPosition( Vector3( sensor_data.pos_x, sensor_data.pos_y + 10.0f, sensor_data.pos_z ) );
+            auto* axes_obj = axes_node->CreateComponent< StaticModel >();
+            axes_obj->SetModel( cache->GetResource< Model >( "axes.mdl" ) );
+            axes_obj->ApplyMaterialList();
+            // axes_obj->SetMaterial( cache->GetResource< Material >( "axes.xml" ) );
+            axes_obj->SetCastShadows( true );
+        }
     }
 }
 //
@@ -849,5 +875,45 @@ void CrowdNavigation::close_out_csv()
 }
 void CrowdNavigation::HandleQuit( StringHash eventType, VariantMap& eventData )
 {
-    close_out_csv();
+    if ( app_mode_ == 0 )
+    {
+        close_out_csv();
+    }
+}
+void CrowdNavigation::read_in_csv( const std::string& filename )
+{
+    csv_doc_.Load( filename );
+    //
+    std::vector< float > time = csv_doc_.GetColumn< float >( "Time (s)" );
+    //
+    std::vector< float > gyr_x = csv_doc_.GetColumn< float >( "Gyroscope X (deg/s)" );
+    std::vector< float > gyr_y = csv_doc_.GetColumn< float >( "Gyroscope Y (deg/s)" );
+    std::vector< float > gyr_z = csv_doc_.GetColumn< float >( "Gyroscope Z (deg/s)" );
+    //
+    std::vector< float > acc_x = csv_doc_.GetColumn< float >( "Accelerometer X (g)" );
+    std::vector< float > acc_y = csv_doc_.GetColumn< float >( "Accelerometer Y (g)" );
+    std::vector< float > acc_z = csv_doc_.GetColumn< float >( "Accelerometer Z (g)" );
+    //
+    std::vector< float > magn_x = csv_doc_.GetColumn< float >( "Magnetometer X (uT)" );
+    std::vector< float > magn_y = csv_doc_.GetColumn< float >( "Magnetometer Y (uT)" );
+    std::vector< float > magn_z = csv_doc_.GetColumn< float >( "Magnetometer Z (uT)" );
+    //
+    int count = time.size();
+    for ( int i = 0; i < count; i++ )
+    {
+        SENSOR_DB sensor_data;
+        //
+        sensor_data.time   = time[ i ];
+        sensor_data.gyro_x = gyr_x[ i ];
+        sensor_data.gyro_y = gyr_y[ i ];
+        sensor_data.gyro_z = gyr_z[ i ];
+        sensor_data.acc_x  = acc_x[ i ];
+        sensor_data.acc_y  = acc_y[ i ];
+        sensor_data.acc_z  = acc_z[ i ];
+        sensor_data.mag_x  = magn_x[ i ];
+        sensor_data.mag_y  = magn_y[ i ];
+        sensor_data.mag_z  = magn_z[ i ];
+        //
+        sensor_data_queue_.enqueue( sensor_data );
+    }
 }
