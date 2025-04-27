@@ -492,7 +492,18 @@ void CrowdNavigation::MoveCamera( float timeStep )
         cameraNode_->Translate( Vector3::RIGHT * MOVE_SPEED * timeStep );
         MainCameraNode_->Translate( Vector3::RIGHT * MOVE_SPEED * timeStep );
     }
-    else if ( input->GetKeyPress( KEY_K ) )
+    if ( input->GetKeyDown( KEY_Q ) )
+    {
+        cameraNode_->Translate( Vector3::UP * MOVE_SPEED * timeStep );
+        MainCameraNode_->Translate( Vector3::UP * MOVE_SPEED * timeStep );
+    }
+    if ( input->GetKeyDown( KEY_E ) )
+    {
+        cameraNode_->Translate( Vector3::DOWN * MOVE_SPEED * timeStep );
+        MainCameraNode_->Translate( Vector3::DOWN * MOVE_SPEED * timeStep );
+    }
+    //
+    if ( input->GetKeyPress( KEY_K ) )
     {
         setNewPos( 0.0, 0.0, 0.0 );
     }
@@ -808,12 +819,15 @@ void CrowdNavigation::read_sensor_end()
         }
         else
         {
+            axes_node_->SetPosition( Vector3( 0.0f, 50.0f, 0.0f ) );
+            //
             auto* cache = GetSubsystem< ResourceCache >();
             infoText_->SetText( sensor_data.info.c_str() );
             //
-            auto axes_node = scene_->CreateChild( "Axes" );
-            axes_node_->SetRotation( Quaternion( sensor_data.roll, sensor_data.pitch, sensor_data.yaw ) );
-            axes_node_->SetPosition( Vector3( sensor_data.pos_x, sensor_data.pos_y + 10.0f, sensor_data.pos_z ) );
+            auto axes_node = scene_->CreateChild( "Axes_test" );
+            axes_node->SetScale( Vector3( 0.05f, 0.05f, 0.05f ) );
+            axes_node->SetRotation( Quaternion( sensor_data.roll, sensor_data.pitch, sensor_data.yaw ) );
+            axes_node->SetPosition( Vector3( sensor_data.pos_x, sensor_data.pos_y + 10.0f, sensor_data.pos_z ) );
             auto* axes_obj = axes_node->CreateComponent< StaticModel >();
             axes_obj->SetModel( cache->GetResource< Model >( "axes.mdl" ) );
             axes_obj->ApplyMaterialList();

@@ -1,12 +1,48 @@
-[Sun Apr 27 11:34:39 2025] INFO: Opened log file /home/kevin/Dev/src/fm.ahrs.apps/bin/CrowdNavigation.log
-[Sun Apr 27 11:34:39 2025] INFO: Created 3 worker threads
-[Sun Apr 27 11:34:39 2025] INFO: Added resource path /home/kevin/Dev/src/fm.ahrs.apps/bin/CoreData/
-[Sun Apr 27 11:34:39 2025] INFO: Added resource path /home/kevin/Dev/src/fm.ahrs.apps/bin/Data/
-[Sun Apr 27 11:34:39 2025] INFO: Added resource path /home/kevin/Dev/src/fm.ahrs.apps/bin/UserData/
-[Sun Apr 27 11:34:39 2025] INFO: Added resource path /home/kevin/Dev/src/fm.ahrs.apps/bin/Autoload/LargeData/
-[Sun Apr 27 11:34:39 2025] INFO: Adapter used Broadcom V3D 7.1.10.2
-[Sun Apr 27 11:34:39 2025] INFO: Set screen mode 1024x768 rate 0 Hz windowed monitor 0 resizable
-[Sun Apr 27 11:34:39 2025] INFO: Initialized input
-[Sun Apr 27 11:34:39 2025] INFO: Initialized user interface
-[Sun Apr 27 11:34:39 2025] INFO: Initialized renderer
-[Sun Apr 27 11:34:39 2025] INFO: Initialized engine
+[Sun Apr 27 12:44:19 2025] INFO: Opened log file /home/kevin/Dev/src/fm.ahrs.apps/bin/CrowdNavigation.log
+[Sun Apr 27 12:44:19 2025] INFO: Created 3 worker threads
+[Sun Apr 27 12:44:19 2025] INFO: Added resource path /home/kevin/Dev/src/fm.ahrs.apps/bin/CoreData/
+[Sun Apr 27 12:44:19 2025] INFO: Added resource path /home/kevin/Dev/src/fm.ahrs.apps/bin/Data/
+[Sun Apr 27 12:44:19 2025] INFO: Added resource path /home/kevin/Dev/src/fm.ahrs.apps/bin/UserData/
+[Sun Apr 27 12:44:19 2025] INFO: Added resource path /home/kevin/Dev/src/fm.ahrs.apps/bin/Autoload/LargeData/
+[Sun Apr 27 12:44:19 2025] INFO: Adapter used Broadcom V3D 7.1.10.2
+[Sun Apr 27 12:44:19 2025] INFO: Set screen mode 1024x768 rate 0 Hz windowed monitor 0 resizable
+[Sun Apr 27 12:44:19 2025] INFO: Initialized input
+[Sun Apr 27 12:44:19 2025] INFO: Initialized user interface
+[Sun Apr 27 12:44:19 2025] INFO: Initialized renderer
+[Sun Apr 27 12:44:19 2025] INFO: Initialized engine
+Used resources:
+Textures/Ramp.png
+Textures/Spot.png
+Textures/logo_outlined.png
+Textures/UI.png
+Textures/TerrainWeights.dds
+Textures/TerrainDetail1.dds
+Textures/TerrainDetail2.dds
+Textures/TerrainDetail3.dds
+Textures/StoneDiffuse.dds
+Textures/StoneNormal.dds
+Techniques/NoTexture.xml
+Techniques/TerrainBlend.xml
+Techniques/DiffNormal.xml
+Techniques/Diff.xml
+RenderPaths/Forward.xml
+UI/DefaultStyle.xml
+Textures/logo_outlined.png
+Textures/UI.png
+Fonts/Anonymous Pro.ttf
+Models/Plane.mdl
+axes.mdl
+Models/Cylinder.mdl
+Models/Jack.mdl
+Materials/Terrain.xml
+Materials/white.xml
+Materials/red.xml
+Materials/green.xml
+Materials/blue.xml
+Materials/StoneTiled.xml
+Materials/Jack.xml
+Shaders/GLSL/Shadow.glsl
+Shaders/GLSL/TerrainBlend.glsl
+Shaders/GLSL/Basic.glsl
+Shaders/GLSL/LitSolid.glsl
+Models/Jack_Walk.ani
